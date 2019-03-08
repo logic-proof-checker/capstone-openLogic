@@ -476,6 +476,34 @@ function makeProof(pardiv, pstart, conc) {
       console.log(message.jstr);
    }
    
+      if(message.jstr.toLowerCase().includes("modus tollendo ponens")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("modus tollendo ponens", "DS");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
+      if(message.jstr.toLowerCase().includes("simplification")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("simplification", "∧E");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
+      if(message.jstr.toLowerCase().includes("addition")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("addition", "∨I");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
+      if(message.jstr.toLowerCase().includes("adjunction")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("adjunction", "∧I");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
    
    
    

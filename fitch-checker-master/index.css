@@ -2,16 +2,18 @@ body{
 	background-color: #f4f1de;	
 }	
 #top-menu{	
-	background-color: #002A4E;	
+	background-color: #002A4E;
+	    border-radius: 0em;
 }	
 #title{	
 	font-family: 'Josefin Sans', sans-serif;	
 	text-shadow: 1px 1.5px 4px #000000;
 	transition: .5s;	
+	letter-spacing: .03em;
 	font-size: 2.2em;
 }	
 #title:hover{
-	text-shadow: 1px 1.5px 1px #000000;
+	letter-spacing: .035em;
 	transition: .5s;	
 
  } 	
