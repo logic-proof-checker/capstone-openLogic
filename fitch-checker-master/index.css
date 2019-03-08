@@ -11,7 +11,7 @@ body{
 	font-size: 2.2em;
 }	
 #title:hover{
-	text-shadow: 1px 1.5px 0px #000000;
+	text-shadow: 1px 1.5px 1px #000000;
 	transition: .5s;	
 
  } 	
