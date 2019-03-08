@@ -446,6 +446,48 @@ function makeProof(pardiv, pstart, conc) {
       proofBeingChecked = this;
       this.results.innerHTML = '<img src="wait.gif" alt="[wait]" /> Checking …';
       var fD = new FormData();
+      
+           this.proofdata.forEach(function(message){
+        
+
+   
+   if(message.jstr.toLowerCase().includes("modus ponens")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("modus ponens", "→E");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
+   
+   
+    if(message.jstr.toLowerCase().includes("modus tollens")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("modus tollens", "MT");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
+   
+      if(message.jstr.toLowerCase().includes("double negation")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("double negation", "DNE");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
+   
+   
+   
+   
+   
+    
+   
+    
+      });
+            
+      
+      
+      
       fD.append("predicateSettings", predicateSettings.toString());
       fD.append("proofData", JSON.stringify(this.proofdata));
       fD.append("wantedConc", this.wantedConc);
