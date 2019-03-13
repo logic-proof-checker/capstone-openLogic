@@ -108,7 +108,7 @@
           <div class="header item">
             <h1 id="title" style = "color : white;">Proof Checker</h1>
           </div>
-          <a class="item" style = "color : white;">
+          <a class="item" style = "color : white;" href="./help.html">
             Help
           </a>
           <a class="item" style = "color : white;">
