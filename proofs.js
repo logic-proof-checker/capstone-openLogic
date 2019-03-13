@@ -504,11 +504,13 @@ function makeProof(pardiv, pstart, conc) {
       
       console.log(message.jstr);
    }
+      if(message.jstr.toLowerCase().includes("eq")    ){
    
-   
-   
-   
-    
+      message.jstr = message.jstr.toLowerCase().replace("eq", "↔E");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
    
     
       });

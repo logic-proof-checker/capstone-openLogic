@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # fitch-checker
 
 Kevin Klement's JavaScript/PHP Fitch-style natural deduction proof editor and checker
@@ -34,3 +35,8 @@ directory served to the web. It requires that your web server runs
 The original code was written by [Kevin
 Klement](https://people.umass.edu/klement/) and is available
 [here](https://the21stcenturymonads.net/forallx/).
+=======
+# Capstone Spring 2019: Logic Proof Checker
+
+site: https://logic-proof-checker.herokuapp.com/
+>>>>>>> dc98a2503539da95d91024a248aacfaebd0d5189
