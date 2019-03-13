@@ -24,12 +24,12 @@
     <title>proof checker</title>
 
     <!-- page style from https://github.com/dhg/Skeleton -->
-    <link rel="stylesheet" href="normalize.css">
-    <link rel="stylesheet" href="skeleton.css">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/skeleton.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet" type="text/css">
     
     <link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">    
     <script 
     src="https://code.jquery.com/jquery-3.1.1.min.js" 
@@ -45,7 +45,7 @@
     </style>
   
     <!-- css file -->
-    <link rel="stylesheet" type="text/css" href="proofs.css" />
+    <link rel="stylesheet" type="text/css" href="../css/proofs.css" />
     <!-- javascript file -->
     <script type="text/javascript" charset="utf-8" src="ajax.js"></script>
     <script type="text/javascript" charset="utf-8" src="syntax.js"></script>
