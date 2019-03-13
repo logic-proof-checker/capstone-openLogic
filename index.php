@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="../css/skeleton.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet" type="text/css">
     
-    <link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="../semantic/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="../css/index.css">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">    
     <script 
@@ -36,7 +36,7 @@
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" 
     crossorigin="anonymous">
     </script>
-    <script src="semantic/semantic.min.js"></script>
+    <script src="../semantic/semantic.min.js"></script>
     
     <style>
       body {font-family: "Noto Sans";}
@@ -47,9 +47,9 @@
     <!-- css file -->
     <link rel="stylesheet" type="text/css" href="../css/proofs.css" />
     <!-- javascript file -->
-    <script type="text/javascript" charset="utf-8" src="ajax.js"></script>
-    <script type="text/javascript" charset="utf-8" src="syntax.js"></script>
-    <script type="text/javascript" charset="utf-8" src="proofs.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../js/ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../js/syntax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../js/proofs.js"></script>
 
     <script type="text/javascript">
       function createProb() {
@@ -108,7 +108,7 @@
           <div class="header item">
             <h1 id="title" style = "color : white;">Proof Checker</h1>
           </div>
-          <a class="item" style = "color : white;">
+          <a href="" class="item" style = "color : white;">
             Help
           </a>
           <a class="item" style = "color : white;">

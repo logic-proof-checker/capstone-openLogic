@@ -185,8 +185,8 @@ function dataToRows(prf, prdata, depth, md, ln) {
             var addsplink = document.createElement("a");
             newrow.bCell.appendChild(addrowlink);
             newrow.bCell.appendChild(addsplink);
-            addrowlink.innerHTML = '<img src="new.png" />';
-            addsplink.innerHTML = '<img src="newsp.png" />';
+            addrowlink.innerHTML = '<img src="../assets/new.png" />';
+            addsplink.innerHTML = '<img src="../assets/newsp.png" />';
             addrowlink.myPos = (currln - 1);
             addrowlink.myProof = prf;
             addsplink.myPos = (currln - 1);
@@ -208,8 +208,8 @@ function dataToRows(prf, prdata, depth, md, ln) {
                var addusplink = document.createElement("a");
                newrow.bCell.appendChild(addurowlink);
                newrow.bCell.appendChild(addusplink);
-               addurowlink.innerHTML = '<img src="newb.png" />';
-               addusplink.innerHTML = '<img src="newspb.png" />';
+               addurowlink.innerHTML = '<img src="../assets/newb.png" />';
+               addusplink.innerHTML = '<img src="../assets/newspb.png" />';
                addurowlink.myPos = (currln - 1);
                addurowlink.myProof = prf;
                addusplink.myPos = (currln - 1);
@@ -444,7 +444,7 @@ function makeProof(pardiv, pstart, conc) {
    
    p.startCheckMe = function() {
       proofBeingChecked = this;
-      this.results.innerHTML = '<img src="wait.gif" alt="[wait]" /> Checking …';
+      this.results.innerHTML = '<img src="../assets/wait.gif" alt="[wait]" /> Checking …';
       var fD = new FormData();
       
            this.proofdata.forEach(function(message){
@@ -504,11 +504,14 @@ function makeProof(pardiv, pstart, conc) {
       
       console.log(message.jstr);
    }
+   if(message.jstr.toLowerCase().includes("eq")    ){
    
+      message.jstr = message.jstr.toLowerCase().replace("eq", "↔E");
+      message.jstr=message.jstr.toUpperCase();
+      
+      console.log(message.jstr);
+   }
    
-   
-   
-    
    
     
       });
@@ -520,7 +523,7 @@ function makeProof(pardiv, pstart, conc) {
       fD.append("proofData", JSON.stringify(this.proofdata));
       fD.append("wantedConc", this.wantedConc);
       fD.append("numPrems", this.numPrems);
-      AJAXPostRequest('checkproof.php', fD, function(text) {
+      AJAXPostRequest('../php/checkproof.php', fD, function(text) {
          processProofCheckResponse(text);
       });
    }
@@ -575,7 +578,7 @@ function makeProof(pardiv, pstart, conc) {
          var a=document.createElement("button");
          a.type = "button";
          this.buttonDiv.appendChild(a);
-         a.innerHTML = '<img src="new.png" /><span>new line</span>';
+         a.innerHTML = '<img src="../assets/new.png" /><span>new line</span>';
          a.title = 'Add a new line.';
          a.myProof = this;
          a.onclick = function() {
@@ -586,7 +589,7 @@ function makeProof(pardiv, pstart, conc) {
          var b=document.createElement("button");
          b.type = "button";
          this.buttonDiv.appendChild(b);
-         b.innerHTML = '<img src="newsp.png" /><span>new subproof</span>';
+         b.innerHTML = '<img src="../assets/newsp.png" /><span>new subproof</span>';
          b.title = 'Add a new subproof.';
          b.myProof = this;
          b.onclick = function() {
