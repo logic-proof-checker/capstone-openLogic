@@ -117,6 +117,8 @@
           <a class="item" style = "color : white;">
             References
           </a>
+
+          
       </div>
 
   <!-- middle stuff -->

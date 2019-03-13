@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Sign up!</title>  
+  <!-- Standard Meta -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <link rel = 'stylesheet' type = 'text/css' href = './semantic/semantic.min.css'>
+  <link rel = 'stylesheet' type = 'text/css' href = 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/icon.min.css'>
+ 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src = "./semantic/semantic.min.js"></script>  
+
+  <style type="text/css">
+    body {
+      background-color: #002A4E;
+    }
+    body > .grid {
+      height: 100%;
+    }
+    .image {
+      margin-top: -100px;
+    }
+    .column {
+      max-width: 450px;
+    }
+  </style>
+  
+</head>
+<body>
+<!-- Navbar -->
+<div id="top-menu" class="ui menu" style = "height : 60px;">
+        <div class="header item">
+          <h1 id="title" style = "color : #002A4E;">Proof Checker</h1>
+        </div>
+</div>
+
+<div class="ui middle aligned center aligned grid">
+        <div class="column">
+          <h2 class="ui teal image header">
+            <!--   <img src="./csumb1    .png" class="image">   -->
+            <div class="content">
+             <h1>  Sign Up here! </h1> 
+            </div>
+          </h2>
+          <form class="ui large form">
+            <div class="ui stacked segment">
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="user icon"></i>
+                  <input type="text" name="Name" placeholder="Full Name">
+                </div>
+              </div>
+              <div class="field">
+                    <div class="ui left icon input">
+                      <i class="user icon"></i>
+                      <input type="text" name="email" placeholder="E-mail address">
+                    </div>
+              </div>
+
+              <div class="field">
+                    <div class="ui left icon input">
+                      <i class="lock icon"></i>
+                      <input type="password" name="password" placeholder="Enter Password">
+                    </div>
+                  </div>
+
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="lock icon"></i>
+                  <input type="password" name="password" placeholder="Re-enter Password">
+                </div>
+              </div>
+
+              <input type="checkbox" name="checkbox" value="check" id="agree" /> I have read and agree to the Terms and Conditions and Privacy Policy
+
+              <br />
+              <div class="ui fluid large teal submit button">Sign Up!</div>
+            </div>
+
+      
+            <div class="ui error message"></div>
+      
+          </form>
+          <div class="ui message">
+                Already have an account? <a href="./login.html">Login!</a>
+            </div>
+      
+          
+        </div>
+      </div>
