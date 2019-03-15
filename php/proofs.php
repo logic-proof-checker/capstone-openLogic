@@ -433,20 +433,16 @@ function followsByBiconIntro($c, $i, $j, $k, $l) {
 }
 
 function followsByBiconElimThisWay($c, $a, $b) {
-    return (
-        ($a->mainOp == "↔")
-        &&
-        ((
-            (sameWff($a->leftSide, $b))
-            &&
-            (sameWff($a->rightSide, $c))
-        )
-         ||
-         (
-             (sameWff($a->leftSide, $c))
-             &&
-             (sameWff($a->rightSide, $b))          
-         ))
+    $bool = false;
+    return(
+        ($a->mainOp == "↔") && 
+        (((sameWff($a->leftSide, $b)) && (sameWff($a->rightSide, $c)))
+        ||
+        ((sameWff($a->leftSide, $c)) && (sameWff($a->rightSide, $b)))
+        || 
+        ((sameWff($a->leftSide, $b->rightSide)) && (sameWff($a->rightSide, $c->rightSide)))
+        ||
+        ((sameWff($a->leftSide, $c->rightSide)) && (sameWff($a->rightSide, $b->rightSide))))
     );
 }
 
@@ -548,7 +544,6 @@ function check_proof($pr, $numprems, $conc) {
         }
     }
     unset($line);
-
 
     // parse jStr for all
     foreach ($fpr as &$line) {
