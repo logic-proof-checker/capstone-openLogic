@@ -1,6 +1,6 @@
 <?php
 
-$tfl_rules = array('∧I','∧E','⊥I','⊥E','¬I','¬E','→I','→E','TND','∨I','∨E','↔I','↔E','DS','R','MT','DNE','DeM','Pr','Hyp','X','IP','LEM');
+$tfl_rules = array('∧I','∧E','⊥I','⊥E','¬I','¬E','→I','→E','TND','∨I','∨E','↔I','↔E','DS','R','MT','DNE','DeM','Pr','Hyp','X','IP','LEM', 'bc');
 $fol_rules = array('∀E','∀I','∃I','∃E','=I','=E','CQ');
 
 $cite_nums = array(
@@ -33,7 +33,9 @@ $cite_nums = array(
     "Pr" => array(0,0),
     "X" => array(1, 0),
     "IP" => array(0, 1),
-    "LEM" => array(0, 2)
+    "LEM" => array(0, 2),
+    "bc" => array(2,0)
+    
 );
 
 function followsByCQThisWay($a, $b) {
@@ -446,6 +448,31 @@ function followsByBiconElimThisWay($c, $a, $b) {
     );
 }
 
+
+
+function bicondition($c, $a, $b){
+    
+    return (
+        
+        ($a->mainOp == "→") && ($b->mainOp == "→") &&  ($c->mainOp == "↔")
+        
+    &&  (sameWff($a->leftSide, $b->rightSide)) 
+    &&  (sameWff($a->rightSide, $b->leftSide))   
+    
+    && (   ((sameWff($a->leftSide, $c->leftSide))&&(sameWff($a->rightSide, $c->rightSide))) 
+    
+    ||                           
+            ((sameWff($b->leftSide, $c->leftSide))&&(sameWff($b->rightSide, $c->rightSide)))
+        
+        )
+        
+        );
+    
+    
+}
+
+
+
 function followsByBiconElim($c, $a, $b) {
     return (
         (followsByBiconElimThisWay($c, $a, $b))
@@ -778,6 +805,11 @@ function check_proof($pr, $numprems, $conc) {
             case "MT":
                 $worked = followsByMT($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff, $fpr[( $fpr[$i]->j->lines[1] - 1  )]->wff);
                 break;
+                
+            case "bc":
+                $worked = bicondition($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff, $fpr[( $fpr[$i]->j->lines[1] - 1  )]->wff);
+                break;     
+                
             case "DNE":
                 $worked = followsByDNE($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff);
                 break;
