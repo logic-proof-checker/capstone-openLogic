@@ -1,6 +1,6 @@
 <?php
 
-$tfl_rules = array('∧I','∧E','⊥I','⊥E','¬I','¬E','→I','→E','TND','∨I','∨E','↔I','↔E','DS','R','MT','DNE','DeM','Pr','Hyp','X','IP','LEM', 'bc');
+$tfl_rules = array('∧I','∧E','⊥I','⊥E','¬I','¬E','→I','→E','TND','∨I','∨E','↔I','↔E','DS','R','MT','DNE','DeM','Pr','Hyp','X','IP','LEM', 'Bicondition');
 $fol_rules = array('∀E','∀I','∃I','∃E','=I','=E','CQ');
 
 $cite_nums = array(
@@ -34,7 +34,7 @@ $cite_nums = array(
     "X" => array(1, 0),
     "IP" => array(0, 1),
     "LEM" => array(0, 2),
-    "bc" => array(2,0)
+    "Bicondition" => array(2,0)
     
 );
 
@@ -554,6 +554,57 @@ function flatten_proof($pr, $dpth_ar) {
 }
 
 
+
+function change_rule_name($rule){ //change rule names in the error feedback
+    
+
+
+if (strpos($rule, 'DNE') !== false) {
+    return "Double Negation";
+}
+    
+    
+if (strpos($rule, '→E') !== false) {
+    return "Modus Ponens";
+} 
+
+if (strpos($rule, 'MT') !== false) {
+    return "Modus Tollens";
+} 
+
+if (strpos($rule, 'DS') !== false) {
+    return "Modus Tollendo Ponens";
+} 
+
+if (strpos($rule, '∧E') !== false) {
+    return "Simplification";
+} 
+
+if (strpos($rule, '∨I') !== false) {
+    return "Addition";
+} 
+
+if (strpos($rule, '∧I') !== false) {
+    return "Adjunction";
+} 
+
+
+if (strpos($rule, '↔E') !== false) {
+    return "Eq";
+} 
+
+
+
+
+
+    return $rule;
+}
+
+
+
+
+
+
 function check_proof($pr, $numprems, $conc) {
     global $cite_nums;
     $rv = new StdClass();
@@ -590,10 +641,10 @@ function check_proof($pr, $numprems, $conc) {
             $act_lc = count($line->j->lines);
             $act_spc = count($line->j->subps);
             if ($act_lc < $good_lc) {
-                array_push($line->issues, 'Cites too few line numbers for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too few line numbers for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_lc > $good_lc) {
-                array_push($line->issues, 'Cites too many line numbers for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too many line numbers for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_spc < $good_spc) {
                 array_push($line->issues, 'Cites too few ranges of lines for the rule ' . $line->j->rules[0] . '.');
@@ -806,7 +857,7 @@ function check_proof($pr, $numprems, $conc) {
                 $worked = followsByMT($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff, $fpr[( $fpr[$i]->j->lines[1] - 1  )]->wff);
                 break;
                 
-            case "bc":
+            case "Bicondition":
                 $worked = bicondition($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff, $fpr[( $fpr[$i]->j->lines[1] - 1  )]->wff);
                 break;     
                 
@@ -955,7 +1006,7 @@ function check_proof($pr, $numprems, $conc) {
                 break;
         }
         if (!($worked)) {
-            array_push($fpr[$i]->issues, 'Is not a proper application of the rule ' . $fpr[$i]->j->rules[0] .' (for the line(s) cited).'); 
+            array_push($fpr[$i]->issues, 'Is not a proper application of the rule ' . change_rule_name($fpr[$i]->j->rules[0]) .' (for the line(s) cited).'); 
         }
         
     }

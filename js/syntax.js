@@ -1,6 +1,7 @@
 var predicateSettings=false;
 
 function prettyStr(s) {
+    
    var ps = s;
    ps = ps.replace(/\s*¬\s*/g,'¬');
    ps = ps.replace(/\s*∨\s*/g,' ∨ ');
@@ -13,6 +14,7 @@ function prettyStr(s) {
 }
 
 function symReplaceNN(s) {
+    
    var fs = s;
    fs = fs.replace(/<[-−]*>/g,'↔');
    fs = fs.replace(/[-−]*>/g,'→');
@@ -66,8 +68,8 @@ function fixJInputStr(s) {
    fs = fs.replace(/\s*,,*\s*/g, ', ');
    fs = fs.replace(/\s*[-−–][-−–]*\s*/g, '–');
    fs = negReplace(fs);
-   fs = fs.replace(/e/g,'E');
-   fs = fs.replace(/i/g,'I');
+   //fs = fs.replace(/e/g,'E');
+   //fs = fs.replace(/i/g,'I');
    fs = fs.replace(/  */g, ' ');
    fs = fs.replace(/([∀∃¬∨∧→↔⊥=]) ([EI])/g, "$1$2");
    fs = fs.replace(/[Tt][Nn][Dd]/g, "TND");
