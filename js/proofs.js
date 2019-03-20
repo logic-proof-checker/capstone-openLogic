@@ -134,6 +134,14 @@ function dataToRows(prf, prdata, depth, md, ln) {
          if ((rowdata.jstr != "Hyp") && (rowdata.jstr != "Pr")) {
             if ((currln != prf.openline) || (!(prf.jopen))) {
                newrow.jCell.innerHTML = rowdata.jstr;
+               
+                 //Start replacing rule names here
+                  
+               rowdata.jstr=changeRuleNames(rowdata.jstr);
+               
+               newrow.jCell.innerHTML= rowdata.jstr;
+            
+               
                if (rowdata.jstr == "") {
                   newrow.jCell.classList.add("showcell");
                }
@@ -141,6 +149,12 @@ function dataToRows(prf, prdata, depth, md, ln) {
                newrow.jCell.myProof = prf;
                newrow.jCell.title = "click to edit";
                newrow.jCell.onclick = function() {
+                  
+                  //replace rule names here after box is clicked
+                  rowdata.jstr=changeRuleNames(rowdata.jstr);
+                  newrow.jCell.innerHTML=rowdata.jstr;
+                  
+                  
                   this.myProof.registerInput();
                   this.myProof.jopen = true;
                   this.myProof.openline = this.myPos;
@@ -504,6 +518,9 @@ function makeProof(pardiv, pstart, conc) {
       
       console.log(message.jstr);
    }
+   
+   //console.log("that:"+message.jstr.toLowerCase());
+   
    if(message.jstr.toLowerCase().includes("eq")    ){
    
       message.jstr = message.jstr.toLowerCase().replace("eq", "↔E");
@@ -511,6 +528,14 @@ function makeProof(pardiv, pstart, conc) {
       
       console.log(message.jstr);
    }
+   
+   if(message.jstr.toLowerCase().includes("bicondition")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("bicondition", "Bicondition");
+      
+      console.log(message.jstr);
+   }
+   
    
    
     
@@ -607,3 +632,64 @@ function makeProof(pardiv, pstart, conc) {
    p.displayMe();
    return p;
 }
+
+
+
+function changeRuleNames( rule){
+   
+     if(rule.toLowerCase().includes("dne")    )
+         rule= rule.toLowerCase().replace("dne", "Double Negation");
+   
+   
+     if(rule.includes("→E")    ){
+         rule = rule.replace("→E", "Modus Ponens");
+ }
+ 
+ 
+     if(rule.includes("MT")    ){
+          rule = rule.replace("MT", "Modus Tollens");
+   }
+   
+   
+   
+    if(rule.includes("DS")    ){
+       rule = rule.replace("DS", "Modus Tollendo Ponens");
+   }
+ 
+   
+   
+   
+   if(rule.includes("∧E")    ){
+   
+      rule = rule.replace("∧E", "Simplification");
+    
+   }
+   
+   
+   
+   if(rule.includes("∨I")    ){
+   
+      rule = rule.replace("∨I", "Addition");
+     
+   }
+   
+   
+    if(rule.includes("∧I")    ){
+   
+      rule = rule.replace("∧I", "Adjunction");
+    
+   }
+   
+      if(rule.includes("↔E")    ){
+   
+      rule = rule.replace("↔E", "eq");
+
+   }
+   
+   
+   
+   
+   return rule;
+}
+
+
