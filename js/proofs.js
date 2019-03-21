@@ -536,6 +536,20 @@ function makeProof(pardiv, pstart, conc) {
       console.log(message.jstr);
    }
    
+   if(message.jstr.toLowerCase().includes("u i")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("u i", "∀E");
+      
+      console.log(message.jstr);
+   }
+   
+   if(message.jstr.toLowerCase().includes("existential generalization")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("existential generalization", "∃I");
+      
+      console.log(message.jstr);
+   }
+   
    
    
     
@@ -674,16 +688,26 @@ function changeRuleNames( rule){
    }
    
    
-    if(rule.includes("∧I")    ){
+   if(rule.includes("∧I")    ){
    
       rule = rule.replace("∧I", "Adjunction");
     
    }
    
-      if(rule.includes("↔E")    ){
+   if(rule.includes("↔E")    ){
    
       rule = rule.replace("↔E", "eq");
 
+   }
+   
+   if(rule.includes("∀E")    ){
+   
+      rule = rule.replace("∀E", "universal instantiation");
+
+   }
+   
+   if(rule.includes("∃I")     ){
+      rule = rule.replace("∃I", "existential generalization");
    }
    
    
