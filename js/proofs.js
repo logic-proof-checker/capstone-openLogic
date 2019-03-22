@@ -519,11 +519,11 @@ function makeProof(pardiv, pstart, conc) {
       console.log(message.jstr);
    }
    
-   //console.log("that:"+message.jstr.toLowerCase());
    
-   if(message.jstr.toLowerCase().includes("eq")    ){
    
-      message.jstr = message.jstr.toLowerCase().replace("eq", "↔E");
+   if(message.jstr.toLowerCase().includes("equivalence")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("equivalence", "↔E");
       message.jstr=message.jstr.toUpperCase();
       
       console.log(message.jstr);
@@ -682,7 +682,7 @@ function changeRuleNames( rule){
    
       if(rule.includes("↔E")    ){
    
-      rule = rule.replace("↔E", "eq");
+      rule = rule.replace("↔E", "equivalence");
 
    }
    
