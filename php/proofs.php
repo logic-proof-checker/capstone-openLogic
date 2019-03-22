@@ -590,7 +590,7 @@ if (strpos($rule, '∧I') !== false) {
 
 
 if (strpos($rule, '↔E') !== false) {
-    return "Eq";
+    return "Equivalence";
 } 
 
 

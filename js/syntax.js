@@ -64,7 +64,14 @@ function fixWffInputStr(s) {
 }
 
 function fixJInputStr(s) {
-   var fs = symReplaceNN(s);
+    
+    
+    if ((predicateSettings)){
+        var fs = symReplaceNN(s);
+    }
+   
+    else var fs=s;   
+   
    fs = fs.replace(/\s*,,*\s*/g, ', ');
    fs = fs.replace(/\s*[-−–][-−–]*\s*/g, '–');
    fs = negReplace(fs);
