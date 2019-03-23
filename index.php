@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -173,10 +174,10 @@
                   <strong><p style="text-decoration: underline;">The following buttons do the following things:</p></strong><br>
                   <table id="key">
                           <tr><td><a>×</a></td><td>= delete this line</td></tr>
-                          <tr><td><a><img src="new.png" alt="|+"/></a></td><td>= add a line below this one</td></tr>
-                          <tr><td><a><img src="newsp.png" alt="||+" /></a></td><td>= add a new subproof below this line</td></tr>
-                          <tr><td><a><img src="newb.png" alt="&lt;+" /></a></td><td>= add a new line below this subproof to the parent subproof</td></tr>
-                          <tr><td><a><img src="newspb.png" alt="&lt;|+" /></a></td><td>= add a new subproof below this subproof to the parent subproof</td></tr>
+                          <tr><td><a><img src="../assets/new.png" alt="|+"/></a></td><td>= add a line below this one</td></tr>
+                          <tr><td><a><img src="../assets/newsp.png" alt="||+" /></a></td><td>= add a new subproof below this line</td></tr>
+                          <tr><td><a><img src="../assets/newb.png" alt="&lt;+" /></a></td><td>= add a new line below this subproof to the parent subproof</td></tr>
+                          <tr><td><a><img src="../assets/newspb.png" alt="&lt;|+" /></a></td><td>= add a new subproof below this subproof to the parent subproof</td></tr>
                   </table>
 
                 </div>

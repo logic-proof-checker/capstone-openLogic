@@ -1,6 +1,6 @@
 <?php
 
-$tfl_rules = array('∧I','∧E','⊥I','⊥E','¬I','¬E','→I','→E','TND','∨I','∨E','↔I','↔E','DS','R','MT','DNE','DeM','Pr','Hyp','X','IP','LEM');
+$tfl_rules = array('∧I','∧E','⊥I','⊥E','¬I','¬E','→I','→E','TND','∨I','∨E','↔I','↔E','DS','R','MT','DNE','DeM','Pr','Hyp','X','IP','LEM', 'Bicondition');
 $fol_rules = array('∀E','∀I','∃I','∃E','=I','=E','CQ');
 
 $cite_nums = array(
@@ -33,7 +33,9 @@ $cite_nums = array(
     "Pr" => array(0,0),
     "X" => array(1, 0),
     "IP" => array(0, 1),
-    "LEM" => array(0, 2)
+    "LEM" => array(0, 2),
+    "Bicondition" => array(2,0)
+    
 );
 
 function followsByCQThisWay($a, $b) {
@@ -433,22 +435,43 @@ function followsByBiconIntro($c, $i, $j, $k, $l) {
 }
 
 function followsByBiconElimThisWay($c, $a, $b) {
-    return (
-        ($a->mainOp == "↔")
-        &&
-        ((
-            (sameWff($a->leftSide, $b))
-            &&
-            (sameWff($a->rightSide, $c))
-        )
-         ||
-         (
-             (sameWff($a->leftSide, $c))
-             &&
-             (sameWff($a->rightSide, $b))          
-         ))
+    $bool = false;
+    return(
+        ($a->mainOp == "↔") && 
+        (((sameWff($a->leftSide, $b)) && (sameWff($a->rightSide, $c)))
+        ||
+        ((sameWff($a->leftSide, $c)) && (sameWff($a->rightSide, $b)))
+        || 
+        ((sameWff($a->leftSide, $b->rightSide)) && (sameWff($a->rightSide, $c->rightSide)))
+        ||
+        ((sameWff($a->leftSide, $c->rightSide)) && (sameWff($a->rightSide, $b->rightSide))))
     );
 }
+
+
+
+function bicondition($c, $a, $b){
+    
+    return (
+        
+        ($a->mainOp == "→") && ($b->mainOp == "→") &&  ($c->mainOp == "↔")
+        
+    &&  (sameWff($a->leftSide, $b->rightSide)) 
+    &&  (sameWff($a->rightSide, $b->leftSide))   
+    
+    && (   ((sameWff($a->leftSide, $c->leftSide))&&(sameWff($a->rightSide, $c->rightSide))) 
+    
+    ||                           
+            ((sameWff($b->leftSide, $c->leftSide))&&(sameWff($b->rightSide, $c->rightSide)))
+        
+        )
+        
+        );
+    
+    
+}
+
+
 
 function followsByBiconElim($c, $a, $b) {
     return (
@@ -531,6 +554,57 @@ function flatten_proof($pr, $dpth_ar) {
 }
 
 
+
+function change_rule_name($rule){ //change rule names in the error feedback
+    
+
+
+if (strpos($rule, 'DNE') !== false) {
+    return "Double Negation";
+}
+    
+    
+if (strpos($rule, '→E') !== false) {
+    return "Modus Ponens";
+} 
+
+if (strpos($rule, 'MT') !== false) {
+    return "Modus Tollens";
+} 
+
+if (strpos($rule, 'DS') !== false) {
+    return "Modus Tollendo Ponens";
+} 
+
+if (strpos($rule, '∧E') !== false) {
+    return "Simplification";
+} 
+
+if (strpos($rule, '∨I') !== false) {
+    return "Addition";
+} 
+
+if (strpos($rule, '∧I') !== false) {
+    return "Adjunction";
+} 
+
+
+if (strpos($rule, '↔E') !== false) {
+    return "Equivalence";
+} 
+
+
+
+
+
+    return $rule;
+}
+
+
+
+
+
+
 function check_proof($pr, $numprems, $conc) {
     global $cite_nums;
     $rv = new StdClass();
@@ -548,7 +622,6 @@ function check_proof($pr, $numprems, $conc) {
         }
     }
     unset($line);
-
 
     // parse jStr for all
     foreach ($fpr as &$line) {
@@ -568,10 +641,10 @@ function check_proof($pr, $numprems, $conc) {
             $act_lc = count($line->j->lines);
             $act_spc = count($line->j->subps);
             if ($act_lc < $good_lc) {
-                array_push($line->issues, 'Cites too few line numbers for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too few line numbers for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_lc > $good_lc) {
-                array_push($line->issues, 'Cites too many line numbers for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too many line numbers for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_spc < $good_spc) {
                 array_push($line->issues, 'Cites too few ranges of lines for the rule ' . $line->j->rules[0] . '.');
@@ -755,6 +828,7 @@ function check_proof($pr, $numprems, $conc) {
                 break;
             case "TND":
                 $worked = followsByTND( $fpr[$i]->wff, $fpr[( $fpr[$i]->j->subps[0]->spstart - 1  )]->wff, $fpr[( $fpr[$i]->j->subps[0]->spend - 1  )]->wff, $fpr[( $fpr[$i]->j->subps[1]->spstart - 1  )]->wff, $fpr[( $fpr[$i]->j->subps[1]->spend - 1  )]->wff);            
+                break;
             case "LEM":
                 $worked = followsByTND( $fpr[$i]->wff, $fpr[( $fpr[$i]->j->subps[0]->spstart - 1  )]->wff, $fpr[( $fpr[$i]->j->subps[0]->spend - 1  )]->wff, $fpr[( $fpr[$i]->j->subps[1]->spstart - 1  )]->wff, $fpr[( $fpr[$i]->j->subps[1]->spend - 1  )]->wff);            
                 break;
@@ -782,6 +856,11 @@ function check_proof($pr, $numprems, $conc) {
             case "MT":
                 $worked = followsByMT($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff, $fpr[( $fpr[$i]->j->lines[1] - 1  )]->wff);
                 break;
+                
+            case "Bicondition":
+                $worked = bicondition($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff, $fpr[( $fpr[$i]->j->lines[1] - 1  )]->wff);
+                break;     
+                
             case "DNE":
                 $worked = followsByDNE($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff);
                 break;
@@ -927,7 +1006,7 @@ function check_proof($pr, $numprems, $conc) {
                 break;
         }
         if (!($worked)) {
-            array_push($fpr[$i]->issues, 'Is not a proper application of the rule ' . $fpr[$i]->j->rules[0] .' (for the line(s) cited).'); 
+            array_push($fpr[$i]->issues, 'Is not a proper application of the rule ' . change_rule_name($fpr[$i]->j->rules[0]) .' (for the line(s) cited).'); 
         }
         
     }
