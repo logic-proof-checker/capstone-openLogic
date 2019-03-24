@@ -1,7 +1,7 @@
 Adding login capabilities
 
 
-=======
+
 Adding login/signup features 
 
  # The package contents:
