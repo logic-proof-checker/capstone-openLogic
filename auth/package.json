@@ -1,13 +1,8 @@
 {
-<<<<<<< HEAD
-  "name": "mern-auth",
-  "version": "1.0.0",
-  "description": "Mern Auth Example",
-=======
+
   "name": "Authorization schema",
   "version": "1.0.0",
   "description": "The login and signup for the logic proof checker app ",
->>>>>>> f658c10153012914ed9b79a865bdb5f8de880844
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
