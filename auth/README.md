@@ -1,9 +1,5 @@
 Adding login capabilities
 
-
-
-Adding login/signup features 
-
  # The package contents:
 
  --- Client: Contains the frontend for the application which is written in react.js and the state of the application is handled by Redux.
