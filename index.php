@@ -118,12 +118,11 @@
           <a class="item" style = "color : white;">
             References
           </a>
-	      <a href="./auth/client/src/components/auth/register.js" class="item" style = "color : white;">
-            Sign-up
-          </a>
-	      
-
-          
+          <div class="right menu">
+  	        <a href="../auth/client/src/components/auth/register.js" class="item" style = "color : white;">
+              Sign-up
+            </a>
+	        </div>
       </div>
 
   <!-- middle stuff -->
