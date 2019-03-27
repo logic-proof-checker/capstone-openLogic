@@ -550,6 +550,12 @@ function makeProof(pardiv, pstart, conc) {
       console.log(message.jstr);
    }
    
+   if(message.jstr.toLowerCase().includes("repeat")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("repeat", "=I");
+      
+      console.log(message.jstr);
+   }
    
    
     
@@ -709,6 +715,11 @@ function changeRuleNames( rule){
    if(rule.includes("∃I")     ){
       rule = rule.replace("∃I", "existential generalization");
    }
+   
+   if(rule.includes("=I")     ){
+      rule = rule.replace("=I", "repeat");
+   }
+   
    
    
    
