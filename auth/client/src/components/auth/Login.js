@@ -76,7 +76,7 @@ class Login extends Component {
                   error={errors.email}
                   id="email"
                   type="email"
-                  autoComplete="off"
+                 
                   className={classnames("", {
                     invalid: errors.email || errors.emailnotfound
                   })}
