@@ -166,6 +166,10 @@ function dataToRows(prf, prdata, depth, md, ln) {
                prf.oInput.title = "Insert justification for this line here.";
                prf.oInput.myPos = (currln - 1);
                prf.oInput.myProof = prf;
+               
+               //change rule names here as well
+               rowdata.jstr=changeRuleNames(rowdata.jstr);
+               
                prf.oInput.value = rowdata.jstr;
                prf.oInput.classList.add("jinput");
                prf.oInput.onchange = function() {
