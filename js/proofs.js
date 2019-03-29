@@ -536,16 +536,24 @@ function makeProof(pardiv, pstart, conc) {
       console.log(message.jstr);
    }
    
-   if(message.jstr.toLowerCase().includes("u i")    ){
+   if(message.jstr.toLowerCase().includes("universal instantiation")    ){
    
-      message.jstr = message.jstr.toLowerCase().replace("u i", "∀E");
-      
+      message.jstr = message.jstr.toLowerCase().replace("universal instantiation", "∀E");
+      message.jstr=message.jstr.toUpperCase();
+
       console.log(message.jstr);
    }
    
    if(message.jstr.toLowerCase().includes("existential generalization")    ){
    
       message.jstr = message.jstr.toLowerCase().replace("existential generalization", "∃I");
+      
+      console.log(message.jstr);
+   }
+   
+   if(message.jstr.toLowerCase().includes("existential instantiation")    ){
+   
+      message.jstr = message.jstr.toLowerCase().replace("existential instantiation", "∃E");
       
       console.log(message.jstr);
    }
@@ -675,8 +683,6 @@ function changeRuleNames( rule){
     if(rule.includes("DS")    ){
        rule = rule.replace("DS", "Modus Tollendo Ponens");
    }
- 
-   
    
    
    if(rule.includes("∧E")    ){
@@ -716,12 +722,13 @@ function changeRuleNames( rule){
       rule = rule.replace("∃I", "existential generalization");
    }
    
+   if(rule.includes("∃E")     ){
+      rule = rule.replace("∃E", "existential instantiation");
+   }
+   
    if(rule.includes("=I")     ){
       rule = rule.replace("=I", "repeat");
    }
-   
-   
-   
    
    
    return rule;
