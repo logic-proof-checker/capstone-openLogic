@@ -614,6 +614,28 @@ if (strpos($rule, '↔E') !== false) {
     return "Equivalence";
 } 
 
+
+if (strpos($rule, '∀E') !== false) {
+    return "universal instantiation";
+} 
+
+if (strpos($rule, '∃I') !== false) {
+    return "existential generalization";
+} 
+
+
+if (strpos($rule, '∃E') !== false) {
+    return "existential instantiation";
+} 
+
+
+if (strpos($rule, '=I') !== false) {
+    return "repeat";
+} 
+
+
+
+
     return $rule;
 }
 
@@ -665,10 +687,10 @@ function check_proof($pr, $numprems, $conc) {
                 array_push($line->issues, 'Cites too many line numbers for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_spc < $good_spc) {
-                array_push($line->issues, 'Cites too few ranges of lines for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too few ranges of lines for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_spc > $good_spc) {
-                array_push($line->issues, 'Cites too many ranges of lines for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too many ranges of lines for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
         }
     }
