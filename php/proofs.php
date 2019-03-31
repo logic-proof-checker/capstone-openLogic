@@ -25,7 +25,7 @@ $cite_nums = array(
     "∀E" => array(1, 0),
     "∀I" => array(1, 0),
     "∃I" => array(1, 0),
-    "∃E" => array(1, 1),
+    "∃E" => array(1, 0),
     "=I" => array(0, 0),
     "=E" => array(2, 0),
     "CQ" => array(1, 0),
@@ -180,6 +180,27 @@ function followsByUI($c, $a) {
     }
     return false;
 }
+
+//testing the existential ... ***
+function followsByEI($c, $a) {
+    if (!($a->mainOp == "∃")) {
+        return false;
+    }
+    // regular instance
+    foreach ($c->myTerms as $t) {
+        if (!(isVar($t))) {
+            if (sameWff($c, subTerm($a->rightSide, $t, $a->myLetter))) {
+                return true;
+            }
+        }
+    }
+    // vacuous binding instance
+    if ((!(in_array($a->myLetter,$a->rightSide->allFreeVars))) && (sameWff($c ,$a->rightSide ))) {
+        return true;
+    }
+    return false;
+}
+//
 
 function followsByDeMThisWay($a, $b) {
     return (
@@ -594,6 +615,24 @@ if (strpos($rule, '↔E') !== false) {
 } 
 
 
+if (strpos($rule, '∀E') !== false) {
+    return "universal instantiation";
+} 
+
+if (strpos($rule, '∃I') !== false) {
+    return "existential generalization";
+} 
+
+
+if (strpos($rule, '∃E') !== false) {
+    return "existential instantiation";
+} 
+
+
+if (strpos($rule, '=I') !== false) {
+    return "repeat";
+} 
+
 
 
 
@@ -612,6 +651,7 @@ function check_proof($pr, $numprems, $conc) {
     $rv->concReached = false;
 
     $fpr = flatten_proof($pr, array() );
+    //var_dump($fpr); //we can use this as a part of saving the proofs, it is the string
 
 
     // check syntax for all
@@ -647,10 +687,10 @@ function check_proof($pr, $numprems, $conc) {
                 array_push($line->issues, 'Cites too many line numbers for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_spc < $good_spc) {
-                array_push($line->issues, 'Cites too few ranges of lines for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too few ranges of lines for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
             if ($act_spc > $good_spc) {
-                array_push($line->issues, 'Cites too many ranges of lines for the rule ' . $line->j->rules[0] . '.');
+                array_push($line->issues, 'Cites too many ranges of lines for the rule ' . change_rule_name($line->j->rules[0]) . '.');
             }
         }
     }
@@ -929,71 +969,82 @@ function check_proof($pr, $numprems, $conc) {
                 }
                 break;
             case "∃E":
-                $exwff = $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff;
-                if ($exwff->mainOp == "∃") {
-                    $sp_hyp = $fpr[( $fpr[$i]->j->subps[0]->spstart - 1  )]->wff;
-                    $sp_res = $fpr[( $fpr[$i]->j->subps[0]->spend - 1  )]->wff;
-                    $res = $fpr[$i]->wff;
-                    if (sameWff($sp_res, $res)) {
-                        if (in_array( $exwff->myLetter, $exwff->rightSide->allFreeVars )) {
-                            $worked = false;
-                            foreach ($sp_hyp->myTerms as $t) {
-                                if (!(isVar($t))) {
-                                    if (sameWff($sp_hyp, subTerm($exwff->rightSide, $t, $exwff->myLetter ))) {
-                                        if (in_array($t, $res->myTerms)) {
-                                            continue;
-                                        }
-                                        if (in_array($t, $exwff->myTerms)) {
-                                            continue;
-                                        }
+                // $exwff = $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff;
+                // if ($exwff->mainOp == "∃") {
+                //     $sp_hyp = $fpr[( $fpr[$i]->j->subps[0]->spstart - 1  )]->wff;
+                //     $sp_res = $fpr[( $fpr[$i]->j->subps[0]->spend - 1  )]->wff;
+                //     $res = $fpr[$i]->wff;
+                //     if (sameWff($sp_res, $res)) {
+                //         if (in_array( $exwff->myLetter, $exwff->rightSide->allFreeVars )) {
+                //             $worked = false;
+                //             foreach ($sp_hyp->myTerms as $t) {
+                //                 if (!(isVar($t))) {
+                //                     if (sameWff($sp_hyp, subTerm($exwff->rightSide, $t, $exwff->myLetter ))) {
+                //                         if (in_array($t, $res->myTerms)) {
+                //                             continue;
+                //                         }
+                //                         if (in_array($t, $exwff->myTerms)) {
+                //                             continue;
+                //                         }
 
-                                        $found = false;
-                                        for ($j=0; $j<$i; $j++) {
-                                            if (($fpr[$j]->j->rules[0] == "Pr") || ($fpr[$j]->j->rules[0] == "Hyp")) {
-                                                $hyp_loc = $fpr[$j]->location;
-                                                $this_loc = $fpr[$i]->location;
-
-
-                                                if (count($hyp_loc) > count($this_loc)) {
-                                                    continue;
-                                                }
-                                                $problem = false;
-                                                for ($d=0; $d<(count($hyp_loc) - 1); $d++) {
-                                                    if ($hyp_loc[$d] != $this_loc[$d]) {
-                                                        $problem = true;
-                                                        break;
-                                                    }
-                                                }
-                                                if (!($problem)) {
-                                                    if ( in_array($t, $fpr[$j]->wff->myTerms)) {
-                                                        $found = true;
-                                                        break;
-                                                    }
-                                                }
+                //                         $found = false;
+                //                         for ($j=0; $j<$i; $j++) {
+                //                             if (($fpr[$j]->j->rules[0] == "Pr") || ($fpr[$j]->j->rules[0] == "Hyp")) {
+                //                                 $hyp_loc = $fpr[$j]->location;
+                //                                 $this_loc = $fpr[$i]->location;
 
 
+                //                                 if (count($hyp_loc) > count($this_loc)) {
+                //                                     continue;
+                //                                 }
+                //                                 $problem = false;
+                //                                 for ($d=0; $d<(count($hyp_loc) - 1); $d++) {
+                //                                     if ($hyp_loc[$d] != $this_loc[$d]) {
+                //                                         $problem = true;
+                //                                         break;
+                //                                     }
+                //                                 }
+                //                                 if (!($problem)) {
+                //                                     if ( in_array($t, $fpr[$j]->wff->myTerms)) {
+                //                                         $found = true;
+                //                                         break;
+                //                                     }
+                //                                 }
 
-                                            }
-                                        }
-                                        if ($found) {
-                                            continue;
-                                        }
-                                        $worked = true;
 
 
-                                    }
-                                }
-                            }
-                        } else {
-                            $worked = sameWff($exwff->rightSide, $sp_hyp);
-                        }
-                    } else {
-                        $worked = false;
+                //                             }
+                //                         }
+                //                         if ($found) {
+                //                             continue;
+                //                         }
+                //                         $worked = true;
+
+
+                //                     }
+                //                 }
+                //             }
+                //         } else {
+                //             $worked = sameWff($exwff->rightSide, $sp_hyp);
+                //         }
+                //     } else {
+                //         $worked = false;
+                //     }
+                // } else {
+                //     $worked = false;
+                // }
+                $worked = followsByEI($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff);
+                $term = $fpr[$i]->wff->myTerms[0];
+                $termCount = 0;
+                for($j=0; $j<=$i; $j++) {
+                    if($fpr[$j]->wff->myTerms[0] == $term){
+                       $termCount++;
                     }
-                } else {
-                    $worked = false;
+                    if($termCount > 1){
+ 
+                       $worked = false;
+                    }
                 }
-
                 break;
             case "=I":
                 $worked = isSelfId( $fpr[$i]->wff );
@@ -1010,7 +1061,7 @@ function check_proof($pr, $numprems, $conc) {
         }
         
     }
-
+    
 
     // merge issues
     for ($i = 0; $i<count($fpr) ; $i++) {
@@ -1036,7 +1087,6 @@ function check_proof($pr, $numprems, $conc) {
             unset($line);
         }
     }
-
 
     return $rv;
 }
