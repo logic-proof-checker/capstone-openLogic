@@ -122,6 +122,9 @@
   	        <a href="../auth/client/src/components/auth/register.js" class="item" style = "color : white;">
               Sign-up
             </a>
+            <a href="../auth/client/src/components/auth/login.js" class="item" style = "color : white;">
+              Login
+            </a>
 	        </div>
       </div>
 
