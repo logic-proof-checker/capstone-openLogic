@@ -46,14 +46,18 @@ textarea{
 	background-color: #438abf;
 	border-radius: 25px;
 }
+#inp{
+	border-color: #002A4E;
+}
 #check-button:hover{
 	background-color: #3875a2;
 }
 #clear-button{
 	border-radius: 25px;
 }
-#results-container{
-	margin-left: 1.5rem;
-	margin-right: 1.5rem;
-	display:none;
+#modal-head{
+	text-align: center;margin-left: 0px;margin-right: 0px;background-color: white;color: black;
+}
+#modal-container{
+	margin: 0 0 0 0;border-radius: 0 0 .28571429rem .28571429rem;max-width: 100%;
 }

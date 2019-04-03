@@ -1,4 +1,10 @@
+<?php
+session_start();
+// $client = new MongoDBClient('mongodb://jaarellano@csumb.edu:1Smartguy@cluster0-aklxe.mongodb.net/test?retryWrites=true');
 
+// $db = $client->test;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -101,6 +107,8 @@
       tp.innerHTML = '';
       makeProof(tp, sofar, wffToString(cw, false));
       }
+      // test
+      
     </script>
 
   </head>
@@ -119,9 +127,9 @@
             References
           </a>
           <div class="right menu">
-  	        <a href="../auth/client/src/components/auth/register.js" class="item" style = "color : white;">
+  	        <p id="log-sign" class="item" style = "color : white;">
               Sign-up
-            </a>
+            </p>
 	        </div>
       </div>
 
@@ -131,7 +139,6 @@
           <div class="two column row" style="padding:2rem">
             <div class="column">
               
-                <!-- <div id="mid-container"> -->
                     <h3 id="textarea-header" class="ui top attached header">
                       Check Your Proof:
                     </h3>
@@ -152,9 +159,9 @@
                       <br>
                       
                     </div>
-                <!-- </div> -->
 
             </div>
+            
             <div class="column" style="margin-left: 0;">
 
                 <h3 id="textarea-header" class="ui top attached header">
@@ -188,77 +195,74 @@
             </div>
           </div>
         </div>
-
-
-	   <!-- <p>This is a demo of a proof checker for Fitch-style natural deduction systems found in many popular introductory logic textbooks. The specific system used here is the one found in <em><a href="http://forallx.openlogicproject.org/">forall x: Calgary Remix</a></em>. (Although based on <em><a href="https://www.fecundity.com/logic/">forall x: an Introduction to Formal Logic</a></em>, the proof system in that original version differs from the one used here and in the <em>Calgary Remix</em>. However, the system also supports the rules used in the <em><a href="http://people.ds.cam.ac.uk/tecb2/forallx.shtml">forall x: Cambridge</a></em> remix.)</p> 
-	  
-	   <h3>Create a new problem</h3>
-
-	  <input type="radio" name="tflfol" id="tflradio" checked /> <label for="tflradio">Propositional </label>
-	  <input type="radio" name="tflfol" id="folradio" /> <label for="folradio">First-Order</label><br />
-	  Premises (separate with “,” or “;”):<br />
-	  <input id="probpremises" /><br />
-	  Conclusion:<br />
-	  <input id="probconc" /><br />
-	  <button type="button" onclick="createProb();" >create problem</button><br /><br />
+        
+        <!--test-->
+      <div class="ui basic modal">
       
-	  <h3 id="problabel" style="display: none;">Proof:</h3>
-	  <p id="proofdetails" style="display: none;"></p>
-	  <div id="theproof"></div> 
+      <h1 class="ui top attached header" id="modal-head" style="text-align: center;margin-left: 0px;margin-right: 0px;background-color: white;color: #002A4E;">login / sign up</h1>    
+      <div class="ui attached placeholder segment" id="modal-container" style="margin: 0 0 0 0;border-radius: 0 0 .28571429rem .28571429rem;max-width: 100%;">
+        <div class="ui two column very relaxed stackable grid" style="margin:0;">
+          <div class="column">
+            <!--left container-->
+            <div class="ui form">
+              <div class="field">
+                <label>Username</label>
+                <div class="ui input">
+                  <input id="inp" type="text" placeholder="username">
+                </div>
+              </div>
+              <div class="field">
+                <label>Password</label>
+                <div class="ui input">
+                  <input type="password" placeholder="password">
+                </div>
+              </div>
+              <div class="ui submit button" style="background-color: #002A4E; color:white;">login</div>
+            </div>
+          </div>
+          <div class="middle aligned column" style="margin-left: 0px;"> 
+          <!--right container-->
+            <div class="ui form">
+              <div class="field">
+                <label>Username</label>
+                <div class="ui input">
+                  <input type="text" placeholder="username">
+                </div>
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <div class="ui input">
+                  <input type="text" placeholder="email">
+                </div>
+              </div>
+              <div class="field">
+                <label>Password</label>
+                <div class="ui input">
+                  <input type="password" placeholder="password">
+                </div>
+              </div>
+              <div class="field">
+                <label>Re-Enter Password</label>
+                <div class="ui input">
+                  <input type="password" placeholder="password">
+                </div>
+              </div>
+              <div class="ui submit button" style="background-color: #002A4E; color:white;">sign up</div>
+            </div>
+          </div>
+        </div>
+        <div class="ui vertical divider">
+          Or
+        </div>
+      </div>
 
-	   <h3>Sample exercise sets</h3>
-
-	  <ul>
-            <li><a href="tfl-exs.html">Sample Truth-Functional Logic exercises</a> (Chap. 15, ex. C; Chap. 17, ex. B)</li>
-            <li><a href="fol-exs.html">Sample First-Order Logic exercises</a> (Chap. 32, ex. E; Chap. 34, ex. A)</li>
-	  </ul> 
-      
-  
-	   <h3>Instructions</h3>
-      
-	  <table id="symkey">
-            <tr><td>For negation you may use any of the symbols:</td><td> <span class="tt">¬ ~ ∼ - −</span></td></tr>
-            <tr><td>For conjunction you may use any of the symbols:</td><td> <span class="tt">∧ ^ &amp; . · *</span></td></tr>
-            <tr><td>For disjunction you may use any of the symbols:</td><td> <span class="tt">∨ v</span></td></tr>
-            <tr><td>For the biconditional you may use any of the symbols:</td><td> <span class="tt">↔ ≡ &lt;-&gt; &lt;&gt;</span> (or in TFL only: <span class="tt">=</span>)</td></tr>
-            <tr><td>For the conditional you may use any of the symbols:</td><td> <span class="tt">→ ⇒ ⊃ -&gt; &gt;</span></td></tr>
-            <tr><td>For the universal quantifier (FOL only), you may use any of the symbols:</td><td> <span class="tt">∀x (∀x) Ax (Ax) (x) ⋀x</span></tr>
-            <tr><td>For the existential quantifier (FOL only), you may use any of the symbols:</td><td> <span class="tt">∃x (∃x) Ex (Ex) ⋁x</span></tr>
-            <tr><td>For a contradiction you may use any of the symbols:</td><td> <span class="tt"> ⊥ XX #</span></td></tr>
-	  </table> 
-	
-	   <p>Apart from premises and assumptions, each line has a cell immediately to its right for entering the justifcation. Click on it to enter the justification as, e.g. “&I 1,2”.</p>
-	  <p>Hopefully it is otherwise more or less obvious how to use it.</p>
-             
-
-	 <div class="four columns">
-	  <h2>Rules</h2>
-<h5>Basic rules</h5>
-	      <img src="rules/ai.svg">
-	      <img src="rules/ae.svg">
-	      <img src="rules/oi.svg">
-	      <img src="rules/oe.svg">
-	      <img src="rules/ci.svg">
-	      <img src="rules/ce.svg">
-	      <img src="rules/ni.svg">
-	      <img src="rules/ne.svg">
-	      <img src="rules/xp.svg">
-	      <img src="rules/ip.svg">
-	      <img src="rules/Ai.svg">
-	      <img src="rules/Ae.svg">
-	      <img src="rules/Ei.svg">
-	      <img src="rules/Ee.svg">
-	      <h5>Derived rules</h5>
-	      <img src="rules/r.svg">
-	      <img src="rules/ds.svg">
-	      <img src="rules/mt.svg">
-	      <img src="rules/dne.svg">
-	      <img src="rules/lem.svg">
-	      <img src="rules/dem.svg">
-	      <img src="rules/qc.svg">
-	      <h5>Rules for Cambridge</h5>
-	      <img src="rules/ri.svg">
-	      <img src="rules/re.svg">
-	      <img src="rules/tnd.svg"> -->
+      </div>
+        
   </body>
+  <script type="text/javascript">
+    $("#log-sign").click(function(){
+        $('.ui.basic.modal').modal('show');
+      });
+      
+  </script>
 </html>
