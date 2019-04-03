@@ -66,11 +66,8 @@ function fixWffInputStr(s) {
 function fixJInputStr(s) {
     
     
-    if ((predicateSettings)){
-        var fs = symReplaceNN(s);
-    }
    
-    else var fs=s;   
+    var fs=s;   
    
    fs = fs.replace(/\s*,,*\s*/g, ', ');
    fs = fs.replace(/\s*[-−–][-−–]*\s*/g, '–');
@@ -89,7 +86,7 @@ function fixJInputStr(s) {
    fs = fs.replace(/AE/g, "∀E");
    fs = fs.replace(/EI/g, "∃I");
    fs = fs.replace(/AI/g, "∀I");
-   fs = fs.replace(/r/g, "R");
+   //fs = fs.replace(/r/g, "R");
    fs = fs.replace(/[Pp][Rr]/g, "");
    fs = fs.replace(/[Hh][Yy][Pp]/g, "");
    fs = fs.replace(/([^\s,0-9–-])([0-9])/g,"$1 $2")
