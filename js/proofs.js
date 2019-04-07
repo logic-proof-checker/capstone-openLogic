@@ -11,6 +11,7 @@ function processProofCheckResponse(text) {
    if (res.issues.length == 0) {
       if (res.concReached == true) {
          restext += '<span style="font-size: 150%; color: green;">☺</span> Congratulations! This proof is correct.';
+         
       } else {
          restext += '<span style="font-size: 150%; color: blue;">😐</span> No errors yet, but you haven’t reached the conclusion.';
       }
