@@ -1,20 +1,32 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import '../../index.css';
 
 class Landing extends Component {
   render() {
     return (
+      <div className="navbar-fixed" >
+        <nav className="z-depth-0">
+          <div className="nav-wrapper white">
+            <Link
+              to="/"
+              style={{
+                fontFamily: "monospace"
+              }}
+              className="col s5 brand-logo center black-text"
+            >
+              <i className="material-icons">code</i>
+              INTRO TO LOGIC
+            </Link>
+          </div>
+        </nav>
+      
+
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row">
           <div className="col s12 center-align">
-            <h4>
-              
-              <span style={{ fontFamily: "monospace" }}>Logic proof checker</span> 
-            </h4>
-            <p className="flow-text grey-text text-darken-1">
-              The page for CST XXX. 
-              Come here if you are enrolled in <b>introduction to logic by Dr. bruns </b>
-            </p>
+           
+            
             <br />
             <div className="col s6">
               <Link
@@ -29,6 +41,7 @@ class Landing extends Component {
                 Register
               </Link>
             </div>
+            
             <div className="col s6">
               <Link
                 to="/login"
@@ -44,6 +57,7 @@ class Landing extends Component {
             </div>
           </div>
         </div>
+      </div>
       </div>
     );
   }
