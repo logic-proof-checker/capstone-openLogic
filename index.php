@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-$client = new MongoDB\Client("mongodb+srv://jaarellano@csumb.edu:1Smartguy!@cluster0-aklxe.mongodb.net/test?retryWrites=true");
+//$client = new MongoDB\Client("mongodb+srv://jaarellano@csumb.edu:1Smartguy!@cluster0-aklxe.mongodb.net/test?retryWrites=true");
 
-$db = $client->test;
+//$db = $client->test;
 
 ?>
 <!DOCTYPE html>
