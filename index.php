@@ -131,9 +131,6 @@ session_start();
   	        <p id="log-sign" class="item" style = "color : white;">
               Sign-up
             </p>
-            <a href="../auth/client/src/components/auth/login.js" class="item" style = "color : white;">
-              Login
-            </a>
 	        </div>
       </div>
 
