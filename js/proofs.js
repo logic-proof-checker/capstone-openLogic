@@ -583,8 +583,6 @@ function makeProof(pardiv, pstart, conc) {
       fD.append("proofData", JSON.stringify(this.proofdata));
       fD.append("wantedConc", this.wantedConc);
       fD.append("numPrems", this.numPrems);
-      // console.log(this.proofdata);
-      // console.log(this.wantedConc); testing stuff need the proof data
       AJAXPostRequest('../php/checkproof.php', fD, function(text) {
          if (!(proofBeingChecked)) {
             return;
@@ -628,7 +626,7 @@ function makeProof(pardiv, pstart, conc) {
       //sending proof to database, still need user sign in
       $.ajax({
          type: "POST",
-         url: "http://localhost:8080/saveproof",
+         url: "https://proofsdb.herokuapp.com/saveproof",
          contentType: "application/json",
          dataType: "json",
          data: JSON.stringify(postData),
