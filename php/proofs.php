@@ -577,8 +577,6 @@ function flatten_proof($pr, $dpth_ar) {
 
 
 function change_rule_name($rule){ //change rule names in the error feedback
-    
-
 
 if (strpos($rule, 'DNE') !== false) {
     return "Double Negation";
@@ -633,9 +631,6 @@ if (strpos($rule, '=I') !== false) {
     return "repeat";
 } 
 
-
-
-
     return $rule;
 }
 
@@ -652,7 +647,19 @@ function check_proof($pr, $numprems, $conc) {
 
     $fpr = flatten_proof($pr, array() );
     //var_dump($fpr); //we can use this as a part of saving the proofs, it is the string
-
+    $premiseStrings = array();
+    $logicStrings = array();
+    $rulesStrings = array();
+    ///////////////////////////
+    for($i = 0; $i < count($fpr); $i++){
+        if(strcmp($fpr[$i]->jstr, "Pr") != 0){
+            array_push($logicStrings, $fpr[$i]->wffstr);
+            array_push($rulesStrings, $fpr[$i]->jstr);
+        }else{
+            array_push($premiseStrings, $fpr[$i]->wffstr);
+        }
+    }
+    //var_dump($rulesStrings);
 
     // check syntax for all
     foreach ($fpr as &$line) {
@@ -969,70 +976,6 @@ function check_proof($pr, $numprems, $conc) {
                 }
                 break;
             case "∃E":
-                // $exwff = $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff;
-                // if ($exwff->mainOp == "∃") {
-                //     $sp_hyp = $fpr[( $fpr[$i]->j->subps[0]->spstart - 1  )]->wff;
-                //     $sp_res = $fpr[( $fpr[$i]->j->subps[0]->spend - 1  )]->wff;
-                //     $res = $fpr[$i]->wff;
-                //     if (sameWff($sp_res, $res)) {
-                //         if (in_array( $exwff->myLetter, $exwff->rightSide->allFreeVars )) {
-                //             $worked = false;
-                //             foreach ($sp_hyp->myTerms as $t) {
-                //                 if (!(isVar($t))) {
-                //                     if (sameWff($sp_hyp, subTerm($exwff->rightSide, $t, $exwff->myLetter ))) {
-                //                         if (in_array($t, $res->myTerms)) {
-                //                             continue;
-                //                         }
-                //                         if (in_array($t, $exwff->myTerms)) {
-                //                             continue;
-                //                         }
-
-                //                         $found = false;
-                //                         for ($j=0; $j<$i; $j++) {
-                //                             if (($fpr[$j]->j->rules[0] == "Pr") || ($fpr[$j]->j->rules[0] == "Hyp")) {
-                //                                 $hyp_loc = $fpr[$j]->location;
-                //                                 $this_loc = $fpr[$i]->location;
-
-
-                //                                 if (count($hyp_loc) > count($this_loc)) {
-                //                                     continue;
-                //                                 }
-                //                                 $problem = false;
-                //                                 for ($d=0; $d<(count($hyp_loc) - 1); $d++) {
-                //                                     if ($hyp_loc[$d] != $this_loc[$d]) {
-                //                                         $problem = true;
-                //                                         break;
-                //                                     }
-                //                                 }
-                //                                 if (!($problem)) {
-                //                                     if ( in_array($t, $fpr[$j]->wff->myTerms)) {
-                //                                         $found = true;
-                //                                         break;
-                //                                     }
-                //                                 }
-
-
-
-                //                             }
-                //                         }
-                //                         if ($found) {
-                //                             continue;
-                //                         }
-                //                         $worked = true;
-
-
-                //                     }
-                //                 }
-                //             }
-                //         } else {
-                //             $worked = sameWff($exwff->rightSide, $sp_hyp);
-                //         }
-                //     } else {
-                //         $worked = false;
-                //     }
-                // } else {
-                //     $worked = false;
-                // }
                 $worked = followsByEI($fpr[$i]->wff, $fpr[( $fpr[$i]->j->lines[0] - 1  )]->wff);
                 $term = $fpr[$i]->wff->myTerms[0];
                 $termCount = 0;
@@ -1087,8 +1030,6 @@ function check_proof($pr, $numprems, $conc) {
             unset($line);
         }
     }
-
     return $rv;
 }
-
 ?>

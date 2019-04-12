@@ -1,3 +1,21 @@
+//class to hold the proof information
+class Proof{
+   id;
+   userSubmitted;
+   Premise;
+   Logic;
+   Rules;
+   timeSubmitted;
+
+   constructor(id, userSubmitted, Premise, Logic, Rules, timeSubmitted){
+      this.id = id;
+      this.userSubmitted = userSubmitted;
+      this.Premise = Premise;
+      this.Logic = Logic;
+      this.Rules = Rules;
+      this.timeSubmitted = timeSubmitted;
+   }
+}
 
 var proofBeingChecked = false;
 
@@ -466,124 +484,163 @@ function makeProof(pardiv, pstart, conc) {
       this.results.innerHTML = '<img src="../assets/wait.gif" alt="[wait]" /> Checking …';
       var fD = new FormData();
       
-           this.proofdata.forEach(function(message){
-        
-
+      this.proofdata.forEach(function(message){
    
-   if(message.jstr.toLowerCase().includes("modus ponens")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("modus ponens", "→E");
-      message.jstr=message.jstr.toUpperCase();
+      if(message.jstr.toLowerCase().includes("modus ponens")    ){
       
-      console.log(message.jstr);
-   }
-   
-   
-    if(message.jstr.toLowerCase().includes("modus tollens")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("modus tollens", "MT");
-      message.jstr=message.jstr.toUpperCase();
+         message.jstr = message.jstr.toLowerCase().replace("modus ponens", "→E");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }
+      if(message.jstr.toLowerCase().includes("modus tollens")    ){
       
-      console.log(message.jstr);
-   }
-   
+         message.jstr = message.jstr.toLowerCase().replace("modus tollens", "MT");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }  
       if(message.jstr.toLowerCase().includes("double negation")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("double negation", "DNE");
-      message.jstr=message.jstr.toUpperCase();
       
-      console.log(message.jstr);
-   }
-   
+         message.jstr = message.jstr.toLowerCase().replace("double negation", "DNE");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }
       if(message.jstr.toLowerCase().includes("modus tollendo ponens")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("modus tollendo ponens", "DS");
-      message.jstr=message.jstr.toUpperCase();
       
-      console.log(message.jstr);
-   }
+         message.jstr = message.jstr.toLowerCase().replace("modus tollendo ponens", "DS");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }
       if(message.jstr.toLowerCase().includes("simplification")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("simplification", "∧E");
-      message.jstr=message.jstr.toUpperCase();
       
-      console.log(message.jstr);
-   }
+         message.jstr = message.jstr.toLowerCase().replace("simplification", "∧E");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }
       if(message.jstr.toLowerCase().includes("addition")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("addition", "∨I");
-      message.jstr=message.jstr.toUpperCase();
       
-      console.log(message.jstr);
-   }
+         message.jstr = message.jstr.toLowerCase().replace("addition", "∨I");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }
       if(message.jstr.toLowerCase().includes("adjunction")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("adjunction", "∧I");
-      message.jstr=message.jstr.toUpperCase();
       
-      console.log(message.jstr);
-   }
-   
-   
-   
-   if(message.jstr.toLowerCase().includes("equivalence")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("equivalence", "↔E");
-      message.jstr=message.jstr.toUpperCase();
+         message.jstr = message.jstr.toLowerCase().replace("adjunction", "∧I");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }
+      if(message.jstr.toLowerCase().includes("equivalence")    ){
       
-      console.log(message.jstr);
-   }
-   
-   if(message.jstr.toLowerCase().includes("bicondition")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("bicondition", "Bicondition");
+         message.jstr = message.jstr.toLowerCase().replace("equivalence", "↔E");
+         message.jstr=message.jstr.toUpperCase();
+         
+         console.log(message.jstr);
+      }
+      if(message.jstr.toLowerCase().includes("bicondition")    ){
       
-      console.log(message.jstr);
-   }
-   
-   if(message.jstr.toLowerCase().includes("universal instantiation")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("universal instantiation", "∀E");
-      message.jstr=message.jstr.toUpperCase();
+         message.jstr = message.jstr.toLowerCase().replace("bicondition", "Bicondition");
+         
+         console.log(message.jstr);
+      }
+      if(message.jstr.toLowerCase().includes("universal instantiation")    ){
+      
+         message.jstr = message.jstr.toLowerCase().replace("universal instantiation", "∀E");
+         message.jstr=message.jstr.toUpperCase();
 
-      console.log(message.jstr);
-   }
-   
-   if(message.jstr.toLowerCase().includes("existential generalization")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("existential generalization", "∃I");
+         console.log(message.jstr);
+      }
       
-      console.log(message.jstr);
-   }
-   
-   if(message.jstr.toLowerCase().includes("existential instantiation")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("existential instantiation", "∃E");
+      if(message.jstr.toLowerCase().includes("existential generalization")    ){
       
-      console.log(message.jstr);
-   }
-   
-   if(message.jstr.toLowerCase().includes("repeat")    ){
-   
-      message.jstr = message.jstr.toLowerCase().replace("repeat", "=I");
+         message.jstr = message.jstr.toLowerCase().replace("existential generalization", "∃I");
+         
+         console.log(message.jstr);
+      }
       
-      console.log(message.jstr);
-   }
-   
-   
-    
+      if(message.jstr.toLowerCase().includes("existential instantiation")    ){
+      
+         message.jstr = message.jstr.toLowerCase().replace("existential instantiation", "∃E");
+         
+         console.log(message.jstr);
+      }
+      
+      if(message.jstr.toLowerCase().includes("repeat")    ){
+      
+         message.jstr = message.jstr.toLowerCase().replace("repeat", "=I");
+         
+         console.log(message.jstr);
+      }
+      
       });
             
-      
-      
-      
       fD.append("predicateSettings", predicateSettings.toString());
       fD.append("proofData", JSON.stringify(this.proofdata));
       fD.append("wantedConc", this.wantedConc);
       fD.append("numPrems", this.numPrems);
       AJAXPostRequest('../php/checkproof.php', fD, function(text) {
-         processProofCheckResponse(text);
+         if (!(proofBeingChecked)) {
+            return;
+         }
+         console.log("XX" + text);
+         var res = JSON.parse(text);
+         var restext = '';
+         if (res.issues.length == 0) {
+            if (res.concReached == true) {
+               restext += '<span style="font-size: 150%; color: green;">☺</span> Congratulations! This proof is correct.';
+            } else {
+               restext += '<span style="font-size: 150%; color: blue;">😐</span> No errors yet, but you haven’t reached the conclusion.';
+            }
+         } else {
+            restext += '<span style="font-size: 150%; color: red;">☹</span> <strong>Sorry there were errors</strong>.<br />';
+            restext += res.issues.join('<br />');
+         }
+         proofBeingChecked.results.innerHTML = restext;
+         proofBeingChecked = false;
       });
+
+      //putting the proof items into arrays
+      var Premise = [];
+      var Logic = [];
+      var Rules = [];
+      for(var i = 0; i < this.proofdata.length; i++){
+         Rules.push(this.proofdata[i].jstr);
+         if(this.proofdata[i].jstr == "Pr"){
+            Premise.push(this.proofdata[i].wffstr);
+         }else{
+            Logic.push(this.proofdata[i].wffstr);
+         }
+      }
+
+      //creating object to send over to server
+      var userSubmitted = null;
+      var id = null;
+      var timeSubmitted = new Date();
+      var postData = new Proof(id, userSubmitted, Premise, Logic, Rules, timeSubmitted);
+
+      //sending proof to database, still need user sign in
+      $.ajax({
+         type: "POST",
+         url: "https://proofsdb.herokuapp.com/saveproof",
+         contentType: "application/json",
+         dataType: "json",
+         data: JSON.stringify(postData),
+         success: function(data,status) {
+            console.log(data);
+            console.log(status);
+         },
+         error: function(data,status) { //optional, used for debugging purposes
+            console.log(data);
+            console.log(status);
+         }
+         
+     });//ajax
+
    }
    
    p.displayMe = function() {
@@ -670,71 +727,42 @@ function makeProof(pardiv, pstart, conc) {
 
 function changeRuleNames( rule){
    
-     if(rule.toLowerCase().includes("dne")    )
-         rule= rule.toLowerCase().replace("dne", "Double Negation");
-   
-   
-     if(rule.includes("→E")    ){
-         rule = rule.replace("→E", "Modus Ponens");
- }
- 
- 
-     if(rule.includes("MT")    ){
-          rule = rule.replace("MT", "Modus Tollens");
+   if(rule.toLowerCase().includes("dne")    ){
+      rule= rule.toLowerCase().replace("dne", "Double Negation");
    }
-   
-   
-   
-    if(rule.includes("DS")    ){
+   if(rule.includes("→E")    ){
+         rule = rule.replace("→E", "Modus Ponens");
+   }
+   if(rule.includes("MT")    ){
+          rule = rule.replace("MT", "Modus Tollens");
+   }   
+   if(rule.includes("DS")    ){
        rule = rule.replace("DS", "Modus Tollendo Ponens");
    }
-   
-   
    if(rule.includes("∧E")    ){
-   
       rule = rule.replace("∧E", "Simplification");
-    
    }
-   
-   
-   
    if(rule.includes("∨I")    ){
-   
       rule = rule.replace("∨I", "Addition");
-     
    }
-   
-   
    if(rule.includes("∧I")    ){
-   
       rule = rule.replace("∧I", "Adjunction");
-    
    }
-   
-   if(rule.includes("↔E")    ){
-   
+   if(rule.includes("↔E")    ){ 
       rule = rule.replace("↔E", "equivalence");
-
    }
-   
    if(rule.includes("∀E")    ){
-   
       rule = rule.replace("∀E", "universal instantiation");
-
    }
-   
    if(rule.includes("∃I")     ){
       rule = rule.replace("∃I", "existential generalization");
    }
-   
    if(rule.includes("∃E")     ){
       rule = rule.replace("∃E", "existential instantiation");
    }
-   
    if(rule.includes("=I")     ){
       rule = rule.replace("=I", "repeat");
    }
-   
    
    return rule;
 }

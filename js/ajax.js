@@ -1,7 +1,6 @@
 
 function AJAXGetRequest(file, getstr, callback) {
     var xhr = new XMLHttpRequest();
-    // xhr.withCredentails = true;
     if (getstr != '') {
         var s = file + '?' + getstr;
     } else {
@@ -18,7 +17,6 @@ function AJAXGetRequest(file, getstr, callback) {
 
 function AJAXPostRequest(file, fD, callback) {
     var xhttp = new XMLHttpRequest();
-    // xhttp.withCredentails = true;
     xhttp.open("POST", file, true);
     xhttp.onreadystatechange = function() {
         if ((xhttp.readyState == 4) && (xhttp.status == "200")) {
