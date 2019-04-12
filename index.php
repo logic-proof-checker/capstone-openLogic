@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-//$client = new MongoDB\Client("mongodb+srv://jaarellano@csumb.edu:1Smartguy!@cluster0-aklxe.mongodb.net/test?retryWrites=true");
-
-//$db = $client->test;
 
 ?>
 <!DOCTYPE html>
@@ -45,7 +42,6 @@ session_start();
     crossorigin="anonymous">
     </script>
     <script src="../semantic/semantic.min.js"></script>
-    
     <style>
       body {font-family: "Noto Sans";}
       a, a:hover, a:visited, a:focus, a:active {color: #0c1c8c; text-decoration: none; font-weight: bold ;}

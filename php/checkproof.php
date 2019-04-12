@@ -19,6 +19,7 @@ if (!(isset($_POST["wantedConc"]))) {
 $pr_data_json = $_POST["proofData"];
 
 $pr_data = json_decode($_POST["proofData"]);
+//var_dump($pr_data);
 
 if (json_last_error() != JSON_ERROR_NONE) {
    return;

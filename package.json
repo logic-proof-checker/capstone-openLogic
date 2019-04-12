@@ -1,0 +1,20 @@
+{
+  "name": "proof-checker",
+  "version": "1.0.0",
+  "description": "site: https://logic-proof-checker.herokuapp.com/",
+  "main": "index.php",
+  "scripts": {
+    "start": "react-scripts start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayarellano6/capstone-openLogic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jayarellano6/capstone-openLogic/issues"
+  },
+  "homepage": "https://github.com/jayarellano6/capstone-openLogic#readme"
+}

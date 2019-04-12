@@ -1030,38 +1030,6 @@ function check_proof($pr, $numprems, $conc) {
             unset($line);
         }
     }
-    
-    ///creating proof object
-    class Proof{
-        //public $Id;
-        public $Premise;
-        public $Logic;
-        public $Rules;
-    }
-    
-    ///saving proof to database
-    if($rv->concReached == true){
-        $newProof = new Proof();
-        $newProof->$Premise = $premiseStrings;
-        $newProof->$Logic = $logicStrings;
-        $newProof->$Rules = $rulesStrings;
-        
-        $url = 'http://localhost:8080/saveproof';
-        $data = $newProof;
-        
-        // use key 'http' even if you send the request to https://...
-        $options = array(
-            'http' => array(
-                'method'  => 'POST',
-                'content' => http_build_query($data)
-            )
-        );
-        $context  = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-        if ($result === FALSE) { /* Handle error */ }
-    }
-    ///
     return $rv;
 }
-
 ?>
