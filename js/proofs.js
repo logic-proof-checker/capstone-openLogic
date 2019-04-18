@@ -2,43 +2,42 @@
 class Proof{
    id;
    userSubmitted;
+   proofName;
    Premise;
    Logic;
    Rules;
+   proofCompleted;
+   conclusion;
    timeSubmitted;
 
-   constructor(id, userSubmitted, Premise, Logic, Rules, timeSubmitted){
+   constructor(id, userSubmitted, proofName, Premise, Logic, Rules, proofCompleted, conclusion, timeSubmitted){
       this.id = id;
       this.userSubmitted = userSubmitted;
+      this.proofName = proofName;
       this.Premise = Premise;
       this.Logic = Logic;
       this.Rules = Rules;
+      this.proofCompleted = proofCompleted;
+      this.conclusion = conclusion;
       this.timeSubmitted = timeSubmitted;
    }
 }
 
-var proofBeingChecked = false;
 
-function processProofCheckResponse(text) {
-   if (!(proofBeingChecked)) {
+
+var proofBeingChecked = false;
+var proofCompleted = false;
+
+function setLocalCompleted(cr){
+   console.log("cr " + cr)
+   cr = cr.toString();
+   localStorage.setItem("completed", cr);
+   if (localStorage.getItem("completed") === cr) {
+      console.log(localStorage.getItem("completed") + " = " + cr)
       return;
-   }
-	console.log("XX" + text);
-   var res = JSON.parse(text);
-   var restext = '';
-   if (res.issues.length == 0) {
-      if (res.concReached == true) {
-         restext += '<span style="font-size: 150%; color: green;">☺</span> Congratulations! This proof is correct.';
-         
-      } else {
-         restext += '<span style="font-size: 150%; color: blue;">😐</span> No errors yet, but you haven’t reached the conclusion.';
-      }
    } else {
-      restext += '<span style="font-size: 150%; color: red;">☹</span> <strong>Sorry there were errors</strong>.<br />';
-      restext += res.issues.join('<br />');
+      setTimeout(setLocalCompleted(cr), 1000);
    }
-   proofBeingChecked.results.innerHTML = restext;
-   proofBeingChecked = false;
 }
 
 function maxdepth(prdata) {
@@ -380,6 +379,7 @@ function makeProof(pardiv, pstart, conc) {
    pardiv.appendChild(p);
    p.classList.add("prooftable");
    p.proofdata = pstart;
+   alert(p.proofdata);
    p.numPrems = 0;
    for (var i=0; i<pstart.length; i++) {
       if ((pstart[i].hasOwnProperty("jstr")) && (pstart[i].jstr=="Pr")) {
@@ -393,7 +393,6 @@ function makeProof(pardiv, pstart, conc) {
    p.oInput = {};
    
    // associated elements
-   
    p.buttonDiv = document.createElement("div");
    pardiv.appendChild(p.buttonDiv);
    p.buttonDiv.classList.add("buttondiv");
@@ -426,6 +425,8 @@ function makeProof(pardiv, pstart, conc) {
    p.startOverButton.myPardiv = pardiv;
    p.startOverButton.conc = conc;
    p.startOverButton.myP = p;
+
+   //start over
    p.startOverButton.onclick = function() {
       this.myP.parentNode.removeChild(this.myP.checkButton);
       this.myP.parentNode.removeChild(this.myP.startOverButton);
@@ -434,18 +435,17 @@ function makeProof(pardiv, pstart, conc) {
       this.myP.parentNode.removeChild(this.myP);
       makeProof(this.myPardiv, this.start, this.conc);
    }
-   
-
-   
-   
+   //delete line from to proof
    p.deleteLine = function(n) {
       this.proofdata = deletePDLine(this.proofdata, n);
    }
+   //add line to proof
    p.addNewLine = function(n) {
       this.proofdata = addNLtoPD(this.proofdata, n, false,false);
       this.openline = (n+2);
       this.jopen = false;
    }
+   //add new subproof 
    p.addNewSubProof = function(n) {
       this.proofdata = addNLtoPD(this.proofdata, n, true,false);
       this.openline = (n+2);
@@ -479,116 +479,121 @@ function makeProof(pardiv, pstart, conc) {
       }
    }
    
+   //check the proof
    p.startCheckMe = function() {
       proofBeingChecked = this;
       this.results.innerHTML = '<img src="../assets/wait.gif" alt="[wait]" /> Checking …';
       var fD = new FormData();
       
+      //changing names of rules to match the book
       this.proofdata.forEach(function(message){
-   
-      if(message.jstr.toLowerCase().includes("modus ponens")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("modus ponens", "→E");
-         message.jstr=message.jstr.toUpperCase();
+         if(message.jstr.toLowerCase().includes("modus ponens")    ){
          
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("modus tollens")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("modus tollens", "MT");
-         message.jstr=message.jstr.toUpperCase();
-         
-         console.log(message.jstr);
-      }  
-      if(message.jstr.toLowerCase().includes("double negation")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("double negation", "DNE");
-         message.jstr=message.jstr.toUpperCase();
-         
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("modus tollendo ponens")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("modus tollendo ponens", "DS");
-         message.jstr=message.jstr.toUpperCase();
-         
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("simplification")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("simplification", "∧E");
-         message.jstr=message.jstr.toUpperCase();
-         
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("addition")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("addition", "∨I");
-         message.jstr=message.jstr.toUpperCase();
-         
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("adjunction")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("adjunction", "∧I");
-         message.jstr=message.jstr.toUpperCase();
-         
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("equivalence")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("equivalence", "↔E");
-         message.jstr=message.jstr.toUpperCase();
-         
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("bicondition")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("bicondition", "Bicondition");
-         
-         console.log(message.jstr);
-      }
-      if(message.jstr.toLowerCase().includes("universal instantiation")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("universal instantiation", "∀E");
-         message.jstr=message.jstr.toUpperCase();
-
-         console.log(message.jstr);
-      }
-      
-      if(message.jstr.toLowerCase().includes("existential generalization")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("existential generalization", "∃I");
-         
-         console.log(message.jstr);
-      }
-      
-      if(message.jstr.toLowerCase().includes("existential instantiation")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("existential instantiation", "∃E");
-         
-         console.log(message.jstr);
-      }
-      
-      if(message.jstr.toLowerCase().includes("repeat")    ){
-      
-         message.jstr = message.jstr.toLowerCase().replace("repeat", "=I");
-         
-         console.log(message.jstr);
-      }
-      
-      });
+            message.jstr = message.jstr.toLowerCase().replace("modus ponens", "→E");
+            message.jstr=message.jstr.toUpperCase();
             
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("modus tollens")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("modus tollens", "MT");
+            message.jstr=message.jstr.toUpperCase();
+            
+            console.log(message.jstr);
+         }  
+         if(message.jstr.toLowerCase().includes("double negation")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("double negation", "DNE");
+            message.jstr=message.jstr.toUpperCase();
+            
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("modus tollendo ponens")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("modus tollendo ponens", "DS");
+            message.jstr=message.jstr.toUpperCase();
+            
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("simplification")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("simplification", "∧E");
+            message.jstr=message.jstr.toUpperCase();
+            
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("addition")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("addition", "∨I");
+            message.jstr=message.jstr.toUpperCase();
+            
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("adjunction")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("adjunction", "∧I");
+            message.jstr=message.jstr.toUpperCase();
+            
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("equivalence")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("equivalence", "↔E");
+            message.jstr=message.jstr.toUpperCase();
+            
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("bicondition")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("bicondition", "Bicondition");
+            
+            console.log(message.jstr);
+         }
+         if(message.jstr.toLowerCase().includes("universal instantiation")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("universal instantiation", "∀E");
+            message.jstr=message.jstr.toUpperCase();
+
+            console.log(message.jstr);
+         }
+         
+         if(message.jstr.toLowerCase().includes("existential generalization")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("existential generalization", "∃I");
+            
+            console.log(message.jstr);
+         }
+         
+         if(message.jstr.toLowerCase().includes("existential instantiation")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("existential instantiation", "∃E");
+            
+            console.log(message.jstr);
+         }
+         
+         if(message.jstr.toLowerCase().includes("repeat")    ){
+         
+            message.jstr = message.jstr.toLowerCase().replace("repeat", "=I");
+            
+            console.log(message.jstr);
+         }
+      });
+      
+      //creating formData to send to checkproof.php
       fD.append("predicateSettings", predicateSettings.toString());
       fD.append("proofData", JSON.stringify(this.proofdata));
       fD.append("wantedConc", this.wantedConc);
       fD.append("numPrems", this.numPrems);
+      //sending proof to be checked
       AJAXPostRequest('../php/checkproof.php', fD, function(text) {
          if (!(proofBeingChecked)) {
             return;
          }
          console.log("XX" + text);
          var res = JSON.parse(text);
+         window.proofCompleted = res.concReached;
+         //line below still happens after the proof is sent to the database for some reason
+         setTimeout(setLocalCompleted(res.concReached), 2000);
          var restext = '';
          if (res.issues.length == 0) {
             if (res.concReached == true) {
@@ -609,20 +614,22 @@ function makeProof(pardiv, pstart, conc) {
       var Logic = [];
       var Rules = [];
       for(var i = 0; i < this.proofdata.length; i++){
-         Rules.push(this.proofdata[i].jstr);
          if(this.proofdata[i].jstr == "Pr"){
             Premise.push(this.proofdata[i].wffstr);
          }else{
             Logic.push(this.proofdata[i].wffstr);
+            Rules.push(this.proofdata[i].jstr);
          }
       }
-
-      //creating object to send over to server
-      var userSubmitted = null;
-      var id = null;
+      //creating object to send over to database server
+      var id = null; //no need to set this, will be set at server
+      var proofName = "n/a"
+      var userSubmitted = null; //only until we get the sign in to work
       var timeSubmitted = new Date();
-      var postData = new Proof(id, userSubmitted, Premise, Logic, Rules, timeSubmitted);
-
+      var conclusion = this.wantedConc;
+      console.log("right before assigning: " + localStorage.getItem("completed"));
+      var bool = localStorage.getItem("completed");
+      var postData = new Proof(id, userSubmitted, proofName, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
       //sending proof to database, still need user sign in
       $.ajax({
          type: "POST",
@@ -638,7 +645,6 @@ function makeProof(pardiv, pstart, conc) {
             console.log(data);
             console.log(status);
          }
-         
      });//ajax
 
    }

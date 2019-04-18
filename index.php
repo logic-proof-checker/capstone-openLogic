@@ -32,7 +32,7 @@ session_start();
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/skeleton.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet" type="text/css">
-    
+    <link rel="icon" href="/assets/logicproofchecker.png">
     <link rel="stylesheet" type="text/css" href="../semantic/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="../css/index.css">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">    
@@ -56,6 +56,7 @@ session_start();
     <script type="text/javascript" charset="utf-8" src="../js/proofs.js"></script>
 
     <script type="text/javascript">
+
       function createProb() {
       predicateSettings = (document.getElementById("folradio").checked);
       var pstr = document.getElementById("probpremises").value;
@@ -104,7 +105,6 @@ session_start();
       tp.innerHTML = '';
       makeProof(tp, sofar, wffToString(cw, false));
       }
-      // test
       
     </script>
 
@@ -113,6 +113,7 @@ session_start();
       <div id="top-menu" class="ui menu" style = "height : 60px;">
           <div class="header item">
             <h1 id="title" style = "color : white;">Proof Checker</h1>
+            <!-- <img id="logo" src="/assets/applogo.png" alt="Italian Trulli" > -->
           </div>
           <a href="help.html" class="item" style = "color : white;">
             Help
@@ -131,7 +132,13 @@ session_start();
       </div>
 
   <!-- middle stuff -->
-  
+      <div id="load-container">
+        <label for="loadproof">load previous proofs: </label>
+        <select id="loadproof">
+          <option> waiting for server...</option>
+        </select>
+      </div>
+      
       <div class="ui vertically divided grid">
           <div class="two column row" style="padding:2rem">
             <div class="column">
@@ -192,10 +199,15 @@ session_start();
             </div>
           </div>
         </div>
+
+        <hr style="margin-bottom: 15px;">
+        <img id="logo" src="/assets/logicproofchecker.png">
+        <p id="bottom">Capstone 2019</p>
+        <p id="bottom">Logic Proof Checker</p>
+        <p id="bottom">Jay Arellano / Mustafa Al Asadi / Gautam Tata / Ben Lenz</p>
+        <br>
         
-        <!--test-->
       <div class="ui basic modal">
-      
       <h1 class="ui top attached header" id="modal-head" style="text-align: center;margin-left: 0px;margin-right: 0px;background-color: white;color: #002A4E;">login / sign up</h1>    
       <div class="ui attached placeholder segment" id="modal-container" style="margin: 0 0 0 0;border-radius: 0 0 .28571429rem .28571429rem;max-width: 100%;">
         <div class="ui two column very relaxed stackable grid" style="margin:0;">
@@ -257,9 +269,70 @@ session_start();
         
   </body>
   <script type="text/javascript">
-    $("#log-sign").click(function(){
-        $('.ui.basic.modal').modal('show');
+    //login and sign up modal;
+      $("#log-sign").click(function(){
+          $('.ui.basic.modal').modal('show');
       });
-      
+
+      //test loading proof not needed in long haul
+      $("#test-load").click(function(){
+        document.getElementById("probpremises").value = "~~A";
+        document.getElementById("probconc").value = "A";
+        createProb();
+      });
+
+      //loading proofs bases on user / still need login and sign up
+      var proofsPulled;
+      $.ajax({
+         type: "GET",
+         url: "https://proofsdb.herokuapp.com/user/null",
+         success: function(data,status) {
+           proofsPulled = data;
+           console.log(proofsPulled);
+           loadproofInnerHtml = "";
+           loadproofInnerHtml += "<option>select one</option>"
+           proofsPulled.forEach(element => {
+            loadproofInnerHtml += "<option value='" + element.id + "'>" + element.proofName + "</option>"
+           });
+           $("#loadproof").html(loadproofInnerHtml);
+         },
+         error: function(data,status) { //optional, used for debugging purposes
+            console.log(data);
+         }
+     });//ajax
+     
+     $("#loadproof").change(function(){
+      var tp = document.getElementById("theproof");
+      var proofId = $(this).children("option:selected").val();
+      var proofwanted;
+
+      proofsPulled.forEach(element => {
+        if(element.id === proofId){
+          proofwanted = element
+        }
+      });
+      var sofar = [];
+      for(var i = 0; i < proofwanted.premise.length; i++){
+        console.log(proofwanted.premise[i]);
+        var w = parseIt(fixWffInputStr(proofwanted.premise[i]));
+        sofar.push({
+            "wffstr": wffToString(w, false),
+            "jstr": "Pr"
+          });
+      }
+      for(var i = 0; i < proofwanted.logic.length; i++){
+        var w = parseIt(fixWffInputStr(proofwanted.logic[i]));
+        //var r = parseIt(fixWffInputStr(proofwanted.rules[i]));
+        sofar.push({
+            "wffstr": wffToString(w, false),
+            "jstr": proofwanted.rules[i]
+          });
+      }
+      console.log(sofar);
+      var conc = fixWffInputStr(proofwanted.conclusion)
+      var cw = parseIt(conc);
+      makeProof(tp, sofar, wffToString(cw, false));
+     });
+
   </script>
 </html>
