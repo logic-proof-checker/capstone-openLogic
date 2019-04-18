@@ -12,6 +12,25 @@ body{
 	letter-spacing: .03em;
 	font-size: 2.2em;
 }	
+#logo{
+	display: block;
+  margin-left: auto;
+	margin-right: auto;
+	width: 100px;
+	margin-bottom: 5px;
+}
+#load-container{
+	padding-left: 2rem;
+	font-size: 12px;
+	color: #002A4E;
+}
+#loadproof{
+	height: 20px;
+}
+hr{
+	width: 90%;
+	border-color: rgba(0, 46, 87, 0.733);
+}
 #title:hover{
 	letter-spacing: .035em;
 	transition: .5s;	
@@ -32,6 +51,11 @@ body{
     border-radius: 0 0 .28571429rem .28571429rem;	
     max-width: 100%;	
 } 	
+#bottom{
+	text-align: center;
+	margin: 0;
+	color: #002A4E;
+}
 textarea{	
 	width: 100%;	
 	height: 25rem;	
