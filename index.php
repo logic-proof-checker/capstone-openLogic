@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,56 +54,29 @@ session_start();
     <script type="text/javascript" charset="utf-8" src="../js/proofs.js"></script>
 
     <script type="text/javascript">
+    var proofsPulled;
+    var user = sessionStorage.getItem("userlogged");
 
-      function createProb() {
-      predicateSettings = (document.getElementById("folradio").checked);
-      var pstr = document.getElementById("probpremises").value;
-      pstr = pstr.replace(/^[,;\s]*/,'');
-      pstr = pstr.replace(/[,;\s]*$/,'');
-      var prems = pstr.split(/[,;\s]*[,;][,;\s]*/);
-      var sofar = [];
-      for (var a=0; a<prems.length; a++) {
-        if (prems[a] != '') {
-          var w = parseIt(fixWffInputStr(prems[a]));
-          if (!(w.isWellFormed)) {
-            alert('Premise ' + (a+1) + ' is not well formed.');
-            return;
-            }
-          if ((predicateSettings) && (!(w.allFreeVars.length == 0))) {
-            alert('Premise ' + (a+1) + ' is not closed.');
-            return;
+    function loadSelect(){
+        //loading proofs bases on user / still need login and sign up
+        $.ajax({
+          type: "GET",
+          url: "https://proofsdb.herokuapp.com/user/" + user,
+          success: function(data,status) {
+            proofsPulled = data;
+            console.log(proofsPulled);
+            loadproofInnerHtml = "";
+            loadproofInnerHtml += "<option>select one</option>"
+            proofsPulled.forEach(element => {
+              loadproofInnerHtml += "<option value='" + element.id + "'>" + element.proofName + "</option>"
+            });
+            $("#loadproof").html(loadproofInnerHtml);
+          },
+          error: function(data,status) { //optional, used for debugging purposes
+              console.log(data);
           }
-          sofar.push({
-            "wffstr": wffToString(w, false),
-            "jstr": "Pr"
-          });
-        }
-      }
-      var conc = fixWffInputStr(document.getElementById("probconc").value);
-      var cw = parseIt(conc);
-      if (!(cw.isWellFormed)) {
-        alert('Conclusion is not well formed.');
-        return;
-      }
-      if ((predicateSettings) && (!(cw.allFreeVars.length == 0))) {
-        alert('The conclusion is not closed.');
-        return;
-      }
-      document.getElementById("problabel").style.display = "block";
-      document.getElementById("proofdetails").style.display = "block";
-      var probstr = '';
-      for (var k=0; k<sofar.length; k++) {
-        probstr += prettyStr(sofar[k].wffstr);
-          if ((k+1) != sofar.length) {
-          probstr += ', ';
-        }
-      }
-      document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
-      var tp = document.getElementById("theproof");
-      tp.innerHTML = '';
-      makeProof(tp, sofar, wffToString(cw, false));
-      }
-      
+      });//ajax
+    }
     </script>
 
   </head>
@@ -126,7 +97,7 @@ session_start();
           </a>
           <div class="right menu">
   	        <p id="log-sign" class="item" style = "color : white;">
-              Sign-up
+              
             </p>
 	        </div>
       </div>
@@ -154,7 +125,7 @@ session_start();
                       <input id="probpremises" /><br /><br />
                       Conclusion:<br />
                       <input id="probconc" /><br /><br />
-                      <button type="button" onclick="createProb();" >create problem</button><br /><br />
+                      <button type="button" id="createProb">create problem</button><br /><br />
                         
                       <h3 id="problabel" style="display: none;">Proof:</h3>
                       <p id="proofdetails" style="display: none;"></p>
@@ -217,16 +188,16 @@ session_start();
               <div class="field">
                 <label>Username</label>
                 <div class="ui input">
-                  <input id="inp" type="text" placeholder="username">
+                  <input id="uIN" type="text" placeholder="username">
                 </div>
               </div>
               <div class="field">
                 <label>Password</label>
                 <div class="ui input">
-                  <input type="password" placeholder="password">
+                  <input id="pIN" type="password" placeholder="password">
                 </div>
               </div>
-              <div class="ui submit button" style="background-color: #002A4E; color:white;">login</div>
+              <div id="login-button" class="ui submit button" style="background-color: #002A4E; color:white;">login</div>
             </div>
           </div>
           <div class="middle aligned column" style="margin-left: 0px;"> 
@@ -269,40 +240,106 @@ session_start();
         
   </body>
   <script type="text/javascript">
-    //login and sign up modal;
+      //login and sign up modal;
       $("#log-sign").click(function(){
+        if(sessionStorage.getItem("userlogged") === null){
           $('.ui.basic.modal').modal('show');
+        }else{
+          alert("need logout still");
+        }
       });
 
-      //test loading proof not needed in long haul
-      $("#test-load").click(function(){
-        document.getElementById("probpremises").value = "~~A";
-        document.getElementById("probconc").value = "A";
-        createProb();
-      });
+      //checking if there is a user logged in
+      //sessionStorage.clear();
+      if(sessionStorage.getItem("userlogged") === null){
+      $("#load-container").hide();
+      $("#log-sign").html("Login / Sign-up");
+    }else{
+      $("#load-container").show();
+      $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
+      loadSelect();
+    }
 
-      //loading proofs bases on user / still need login and sign up
-      var proofsPulled;
-      $.ajax({
+      //logging in
+      $("#login-button").click(function(){
+        var u = $("#uIN").val();
+        var p = $("#pIN").val();
+
+        $.ajax({
          type: "GET",
-         url: "https://proofsdb.herokuapp.com/user/null",
+         url: "https://proofsdb.herokuapp.com/login/" + u,
          success: function(data,status) {
-           proofsPulled = data;
-           console.log(proofsPulled);
-           loadproofInnerHtml = "";
-           loadproofInnerHtml += "<option>select one</option>"
-           proofsPulled.forEach(element => {
-            loadproofInnerHtml += "<option value='" + element.id + "'>" + element.proofName + "</option>"
-           });
-           $("#loadproof").html(loadproofInnerHtml);
+           console.log(data);
+           sessionStorage.setItem("userlogged", data.username);
+           $("#load-container").show();
+           $("#log-sign").html(sessionStorage.getItem("userlogged"));
+           loadSelect();
+           $('.ui.basic.modal').modal('hide');
          },
          error: function(data,status) { //optional, used for debugging purposes
-            console.log(data);
+          console.log(status);
+          console.log(data);
          }
-     });//ajax
+        });//ajax
+
      
+      });
+      //
+
+      //creating a problem based on premise and conclusion
+      $("#createProb").click( function() {
+      predicateSettings = (document.getElementById("folradio").checked);
+      var pstr = document.getElementById("probpremises").value;
+      pstr = pstr.replace(/^[,;\s]*/,'');
+      pstr = pstr.replace(/[,;\s]*$/,'');
+      var prems = pstr.split(/[,;\s]*[,;][,;\s]*/);
+      var sofar = [];
+      for (var a=0; a<prems.length; a++) {
+        if (prems[a] != '') {
+          var w = parseIt(fixWffInputStr(prems[a]));
+          if (!(w.isWellFormed)) {
+            alert('Premise ' + (a+1) + ' is not well formed.');
+            return;
+            }
+          if ((predicateSettings) && (!(w.allFreeVars.length == 0))) {
+            alert('Premise ' + (a+1) + ' is not closed.');
+            return;
+          }
+          sofar.push({
+            "wffstr": wffToString(w, false),
+            "jstr": "Pr"
+          });
+        }
+      }
+      var conc = fixWffInputStr(document.getElementById("probconc").value);
+      var cw = parseIt(conc);
+      if (!(cw.isWellFormed)) {
+        alert('Conclusion is not well formed.');
+        return;
+      }
+      if ((predicateSettings) && (!(cw.allFreeVars.length == 0))) {
+        alert('The conclusion is not closed.');
+        return;
+      }
+      document.getElementById("problabel").style.display = "block";
+      document.getElementById("proofdetails").style.display = "block";
+      var probstr = '';
+      for (var k=0; k<sofar.length; k++) {
+        probstr += prettyStr(sofar[k].wffstr);
+          if ((k+1) != sofar.length) {
+          probstr += ', ';
+        }
+      }
+      document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
+      var tp = document.getElementById("theproof");
+      tp.innerHTML = '';
+      makeProof(tp, sofar, wffToString(cw, false));
+      });
+      ///
+    
      $("#loadproof").change(function(){
       var tp = document.getElementById("theproof");
+      $("#theproof").html("");
       var proofId = $(this).children("option:selected").val();
       var proofwanted;
 
@@ -313,7 +350,6 @@ session_start();
       });
       var sofar = [];
       for(var i = 0; i < proofwanted.premise.length; i++){
-        console.log(proofwanted.premise[i]);
         var w = parseIt(fixWffInputStr(proofwanted.premise[i]));
         sofar.push({
             "wffstr": wffToString(w, false),
@@ -328,11 +364,10 @@ session_start();
             "jstr": proofwanted.rules[i]
           });
       }
-      console.log(sofar);
       var conc = fixWffInputStr(proofwanted.conclusion)
       var cw = parseIt(conc);
       makeProof(tp, sofar, wffToString(cw, false));
      });
-
+    ///
   </script>
 </html>
