@@ -1,6 +1,7 @@
 //class to hold the proof information
 class Proof{
    id;
+   entryType
    userSubmitted;
    proofName;
    Premise;
@@ -10,8 +11,9 @@ class Proof{
    conclusion;
    timeSubmitted;
 
-   constructor(id, userSubmitted, proofName, Premise, Logic, Rules, proofCompleted, conclusion, timeSubmitted){
+   constructor(id, entryType, userSubmitted, proofName, Premise, Logic, Rules, proofCompleted, conclusion, timeSubmitted){
       this.id = id;
+      this.entryType = entryType;
       this.userSubmitted = userSubmitted;
       this.proofName = proofName;
       this.Premise = Premise;
@@ -379,7 +381,6 @@ function makeProof(pardiv, pstart, conc) {
    pardiv.appendChild(p);
    p.classList.add("prooftable");
    p.proofdata = pstart;
-   alert(p.proofdata);
    p.numPrems = 0;
    for (var i=0; i<pstart.length; i++) {
       if ((pstart[i].hasOwnProperty("jstr")) && (pstart[i].jstr=="Pr")) {
@@ -623,7 +624,8 @@ function makeProof(pardiv, pstart, conc) {
       }
       //creating object to send over to database server
       var id = null; //no need to set this, will be set at server
-      var proofName = "n/a"
+      var entryType = "proof";
+      var proofName = "n/a";
       var userSubmitted = null; //only until we get the sign in to work
       var timeSubmitted = new Date();
       var conclusion = this.wantedConc;
