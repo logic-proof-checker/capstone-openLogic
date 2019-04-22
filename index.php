@@ -195,6 +195,7 @@ session_start();
                 <label>Password</label>
                 <div class="ui input">
                   <input id="pIN" type="password" placeholder="password">
+                  <span toggle="#pIN" class="fa fa-fw fa-eye field-icon toggle-password">show</span>
                 </div>
               </div>
               <div id="login-button" class="ui submit button" style="background-color: #002A4E; color:white;">login</div>
@@ -272,9 +273,13 @@ session_start();
            console.log(data);
            sessionStorage.setItem("userlogged", data.username);
            $("#load-container").show();
-           $("#log-sign").html(sessionStorage.getItem("userlogged"));
-           loadSelect();
-           $('.ui.basic.modal').modal('hide');
+           if(u === data.username && p === data.password){
+             $("#log-sign").html(sessionStorage.getItem("userlogged"));
+             loadSelect();
+             $('.ui.basic.modal').modal('hide');
+           }else{
+             alert("username or password incorrect");
+           }
          },
          error: function(data,status) { //optional, used for debugging purposes
           console.log(status);
@@ -369,5 +374,20 @@ session_start();
       makeProof(tp, sofar, wffToString(cw, false));
      });
     ///
+
+    $(".toggle-password").hover(function(){
+      var input = $($(this).attr("toggle"));
+      if (input.attr("type") == "password") {
+        input.attr("type", "text");
+        $(this).css("color", "black");
+      } else {
+        $(this).css("color", "rgb(160, 160, 160)");
+        input.attr("type", "password");
+      }
+    });
+
+    $("#title").mouseover(function(){
+      $(this).transition('pulse');
+    });
   </script>
 </html>

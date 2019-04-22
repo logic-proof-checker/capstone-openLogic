@@ -31,11 +31,6 @@ hr{
 	width: 90%;
 	border-color: rgba(0, 46, 87, 0.733);
 }
-#title:hover{
-	letter-spacing: .035em;
-	transition: .5s;	
-
- } 	
 #mid-container{	
 	padding: 1.5rem;	
 	width: 50%;
@@ -84,4 +79,11 @@ textarea{
 }
 #modal-container{
 	margin: 0 0 0 0;border-radius: 0 0 .28571429rem .28571429rem;max-width: 100%;
+}
+.toggle-password {
+	float: right;
+	color: rgb(160, 160, 160);
+	margin-left: -43px;
+  margin-top: 11px;
+  z-index: 2;
 }
