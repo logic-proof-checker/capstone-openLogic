@@ -631,7 +631,7 @@ function makeProof(pardiv, pstart, conc) {
       var conclusion = this.wantedConc;
       console.log("right before assigning: " + localStorage.getItem("completed"));
       var bool = localStorage.getItem("completed");
-      var postData = new Proof(id, userSubmitted, proofName, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
+      var postData = new Proof(id, entryType, userSubmitted, proofName, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
       //sending proof to database, still need user sign in
       $.ajax({
          type: "POST",
