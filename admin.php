@@ -85,7 +85,7 @@
           <div class="ui attached segment">
               
             <div id="optionsList" class="ui bulleted list">
-              <div id="li" class="item"><a href="" style="color:black; font-weight: 300;">Add Proofs</a></div>
+              <div id="li" class="item"><a href="index.php/?mode=insert" style="color:black; font-weight: 300;">Add Proofs</a></div>
               <div id="li" class="item"><a href="" style="color:black; font-weight: 300;">View Students</a></div>
               <div id="li" class="item"><a href="" style="color:black; font-weight: 300;">View Proof Stats</a></div>
             </div>
