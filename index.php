@@ -318,9 +318,11 @@ session_start();
       //checking if there is a user logged in
       if(sessionStorage.getItem("userlogged") === null){
         $("#load-container").hide();
+        $("#nameYourProof").hide();
         $("#log-sign").html("Login / Sign-up");
       }else{
         $("#load-container").show();
+        $("#nameYourProof").show();
         $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
         loadSelect();
       }
