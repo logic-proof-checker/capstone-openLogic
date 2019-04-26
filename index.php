@@ -57,7 +57,28 @@ session_start();
     var proofsPulled;
     var user = sessionStorage.getItem("userlogged");
 
+    class User{
+      id;
+      entryType;
+      username;
+      email;
+      password;
+
+      constructor(id, entryType, username, email, password){
+        this.id = id;
+        this.entryType = entryType;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+      }
+    }
+    
+    function hasNumber(myString) {
+      return /\d/.test(myString);
+    }
+
     function loadSelect(){
+        user = sessionStorage.getItem("userlogged");
         //loading proofs bases on user / still need login and sign up
         $.ajax({
           type: "GET",
@@ -118,6 +139,13 @@ session_start();
                       Check Your Proof:
                     </h3>
                     <div id="textarea-container" class="ui attached segment">
+
+                        <div id="nameYourProof" style="padding-bottom: 14px;">
+                        <label>name your proof:</label>
+                        <div class="ui input" >
+                          <input id="proofName" type="text" placeholder="proof name" data-content="Naming your proof will allow you to finish it later if it is incomplete!">
+                        </div>
+                        </div>
 
                       <input type="radio" name="tflfol" id="tflradio" checked /> <label for="tflradio">Propositional </label>
                       <input type="radio" name="tflfol" id="folradio" /> <label for="folradio">First-Order</label><br /><br />
@@ -205,30 +233,32 @@ session_start();
           <!--right container-->
             <div class="ui form">
               <div class="field">
-                <label>Username</label>
+                <label>Username <span id="uUPspan">username is taken</span></label>
                 <div class="ui input">
-                  <input type="text" placeholder="username">
+                  <input id="uUP" type="text" placeholder="username">
                 </div>
               </div>
               <div class="field">
                 <label>Email</label>
                 <div class="ui input">
-                  <input type="text" placeholder="email">
+                  <input id="eUP" type="text" placeholder="email">
                 </div>
               </div>
               <div class="field">
                 <label>Password</label>
                 <div class="ui input">
-                  <input type="password" placeholder="password">
+                  <input id="pUP" type="password" placeholder="password">
+                  <span toggle="#pUP" class="fa fa-fw fa-eye field-icon toggle-password">show</span>
                 </div>
               </div>
               <div class="field">
                 <label>Re-Enter Password</label>
                 <div class="ui input">
-                  <input type="password" placeholder="password">
+                  <input id="repUP" type="password" placeholder="password">
+                  <span toggle="#repUP" class="fa fa-fw fa-eye field-icon toggle-password">show</span>
                 </div>
               </div>
-              <div class="ui submit button" style="background-color: #002A4E; color:white;">sign up</div>
+              <div id="signupButton" class="ui submit button" style="background-color: #002A4E; color:white;">sign up</div>
             </div>
           </div>
         </div>
@@ -237,59 +267,168 @@ session_start();
         </div>
       </div>
 
+      <div id="logoutmodal" class="ui basic modal">
+        <div id="logoutUsername" class="ui icon header">
+        </div>
+        <div class="content" style="text-align: center;">
+          Are you sure you would like to log out?
+        </div>
+        <div class="actions" style="text-align: center;">
+          <div class="ui basic cancel inverted button">
+            cancel
+          </div>
+          <div id="logoutButton" class="ui red ok inverted button">
+            logout
+          </div>
+        </div>
+      </div>
+
       </div>
         
   </body>
   <script type="text/javascript">
+
+      $('#logoutmodal').modal('hide');
+      var signInGood = true;
+      $("#uUPspan").hide();
+
       //login and sign up modal;
       $("#log-sign").click(function(){
         if(sessionStorage.getItem("userlogged") === null){
           $('.ui.basic.modal').modal('show');
         }else{
-          alert("need logout still");
+          $("#logoutUsername").html(sessionStorage.getItem("userlogged"));
+          $('#logoutmodal').modal('show');
         }
       });
 
+      //logout
+      $("#logoutButton").click(function(){
+        sessionStorage.removeItem("userlogged");
+        location.reload(); 
+      });
+
       //checking if there is a user logged in
-      //sessionStorage.clear();
       if(sessionStorage.getItem("userlogged") === null){
-      $("#load-container").hide();
-      $("#log-sign").html("Login / Sign-up");
-    }else{
-      $("#load-container").show();
-      $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
-      loadSelect();
-    }
+        $("#load-container").hide();
+        $("#log-sign").html("Login / Sign-up");
+      }else{
+        $("#load-container").show();
+        $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
+        loadSelect();
+      }
 
       //logging in
       $("#login-button").click(function(){
         var u = $("#uIN").val();
         var p = $("#pIN").val();
 
-        $.ajax({
-         type: "GET",
-         url: "https://proofsdb.herokuapp.com/login/" + u,
-         success: function(data,status) {
-           console.log(data);
-           sessionStorage.setItem("userlogged", data.username);
-           $("#load-container").show();
-           if(u === data.username && p === data.password){
-             $("#log-sign").html(sessionStorage.getItem("userlogged"));
-             loadSelect();
-             $('.ui.basic.modal').modal('hide');
-           }else{
-             alert("username or password incorrect");
-           }
-         },
-         error: function(data,status) { //optional, used for debugging purposes
-          console.log(status);
-          console.log(data);
-         }
-        });//ajax
+        if(u === "" || p === ""){
+          alert("LOGIN ERROR: username or password empty!");
+        }
+        else{
+          $.ajax({
+          type: "GET",
+          url: "https://proofsdb.herokuapp.com/li/" + u,
+          success: function(data,status) {
+            sessionStorage.setItem("userlogged", data.username);
+            $("#load-container").show();
+            if(u === data.username && p === data.password){
+              $("#log-sign").html(sessionStorage.getItem("userlogged"));
+              loadSelect();
+              $('.ui.basic.modal').modal('hide');
+            }else{
+              console.log(data);
+              alert("username or password incorrect");
+              sessionStorage.removeItem("userlogged");
+              location.reload(); 
+            }
+          },
+          error: function(data,status) { //optional, used for debugging purposes
+            console.log(status);
+            console.log(data);
+          }
+          });//ajax
+        }
 
      
       });
       //
+
+      //checking if username is valid on signup
+      $("#uUP").on("keyup paste", function(){
+        if($("#uUP").val().includes("/") || $("#uUP").val().includes("\\")){
+          alert("username cannot contail '/' or '\\'");
+        }
+        if($("#uUP").val() === ""){
+          $("#uUP").css("background-color", "white");
+        }else{
+          var us = $("#uUP").val();
+        $.ajax({
+         type: "GET",
+         url: "https://proofsdb.herokuapp.com/li/" + us,
+         success: function(data,status) {
+           console.log(data);
+           if(data === ""){
+            $("#uUP").css("background-color", "#e7ffdd");
+            $("#uUPspan").hide();
+            signInGood = true;
+           }else{
+            $("#uUP").css("background-color", "#ffdddd");
+            $("#uUPspan").show();
+            signInGood = false;
+            }
+         },
+         error: function(data,status) { //optional, used for debugging purposes
+         }
+        });//ajax
+        }
+      });
+      ///
+
+      //signing up
+      $("#signupButton").click(function () {
+        if($("#uUP").val() === "" || $("#eUP").val() === "" || 
+        $("#pUP").val() === "" || $("#repUP").val() === ""){
+          alert("all fields must be filled!");
+        }
+        else if(signInGood === false){
+          alert("CANNOT SIGN UP WITH TAKEN USERNAME");
+        }
+        else if($("#pUP").val().length < 7){
+          alert("password must be at least 7 characters long");
+        }
+        else if(!hasNumber($("#pUP").val())){
+          alert("password must have at least one number");
+        }
+        else if($("#pUP").val() !== $("#repUP").val()){
+          alert("passwords do not match");
+        }else{
+          var id = null;
+          var entryType = "user";
+          var username = $("#uUP").val();
+          var email = $("#eUP").val();
+          var password = $("#pUP").val();
+
+          var newUser = new User(id, entryType, username, email, password);
+
+          //sending proof to database, still need user sign in
+          $.ajax({
+              type: "POST",
+              url: "https://proofsdb.herokuapp.com/newuser",
+              contentType: "application/json",
+              dataType: "json",
+              data: JSON.stringify(newUser),
+              success: function(data,status) {
+                sessionStorage.setItem("userlogged", username);
+                location.reload(); 
+              },
+              error: function(data,status) { //optional, used for debugging purposes
+                  
+              }
+          });//ajax
+        }
+      });
 
       //creating a problem based on premise and conclusion
       $("#createProb").click( function() {
@@ -342,9 +481,8 @@ session_start();
       });
       ///
     
+    //loading a proof
      $("#loadproof").change(function(){
-      var tp = document.getElementById("theproof");
-      $("#theproof").html("");
       var proofId = $(this).children("option:selected").val();
       var proofwanted;
 
@@ -371,11 +509,22 @@ session_start();
       }
       var conc = fixWffInputStr(proofwanted.conclusion)
       var cw = parseIt(conc);
+      var probstr = '';
+      for (var k=0; k<sofar.length; k++) {
+        probstr += prettyStr(sofar[k].wffstr);
+          if ((k+1) != sofar.length) {
+          probstr += ', ';
+        }
+      }
+      document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
+      var tp = document.getElementById("theproof");
+      $("#theproof").html("");
+      $("#proofdetails").show();
       makeProof(tp, sofar, wffToString(cw, false));
      });
     ///
 
-    $(".toggle-password").hover(function(){
+    $(".toggle-password").click(function(){
       var input = $($(this).attr("toggle"));
       if (input.attr("type") == "password") {
         input.attr("type", "text");
@@ -388,6 +537,10 @@ session_start();
 
     $("#title").mouseover(function(){
       $(this).transition('pulse');
+    });
+
+    $('#proofName').popup({ 
+      on: 'hover'
     });
   </script>
 </html>

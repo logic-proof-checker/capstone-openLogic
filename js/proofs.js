@@ -31,11 +31,10 @@ var proofBeingChecked = false;
 var proofCompleted = false;
 
 function setLocalCompleted(cr){
-   console.log("cr " + cr)
+   //console.log("cr " + cr)
    cr = cr.toString();
-   localStorage.setItem("completed", cr);
-   if (localStorage.getItem("completed") === cr) {
-      console.log(localStorage.getItem("completed") + " = " + cr)
+   sessionStorage.setItem("completed", cr);
+   if (sessionStorage.getItem("completed") === cr) {
       return;
    } else {
       setTimeout(setLocalCompleted(cr), 1000);
@@ -435,6 +434,8 @@ function makeProof(pardiv, pstart, conc) {
       this.myP.parentNode.removeChild(this.myP.buttonDiv);
       this.myP.parentNode.removeChild(this.myP);
       makeProof(this.myPardiv, this.start, this.conc);
+      $("#proofdetails").hide();
+      $("#theproof").html("");
    }
    //delete line from to proof
    p.deleteLine = function(n) {
@@ -482,6 +483,7 @@ function makeProof(pardiv, pstart, conc) {
    
    //check the proof
    p.startCheckMe = function() {
+
       proofBeingChecked = this;
       this.results.innerHTML = '<img src="../assets/wait.gif" alt="[wait]" /> Checking …';
       var fD = new FormData();
@@ -579,76 +581,97 @@ function makeProof(pardiv, pstart, conc) {
             console.log(message.jstr);
          }
       });
-      
-      //creating formData to send to checkproof.php
-      fD.append("predicateSettings", predicateSettings.toString());
-      fD.append("proofData", JSON.stringify(this.proofdata));
-      fD.append("wantedConc", this.wantedConc);
-      fD.append("numPrems", this.numPrems);
-      //sending proof to be checked
-      AJAXPostRequest('../php/checkproof.php', fD, function(text) {
-         if (!(proofBeingChecked)) {
-            return;
-         }
-         console.log("XX" + text);
-         var res = JSON.parse(text);
-         window.proofCompleted = res.concReached;
-         //line below still happens after the proof is sent to the database for some reason
-         setTimeout(setLocalCompleted(res.concReached), 2000);
-         var restext = '';
-         if (res.issues.length == 0) {
-            if (res.concReached == true) {
-               restext += '<span style="font-size: 150%; color: green;">☺</span> Congratulations! This proof is correct.';
-            } else {
-               restext += '<span style="font-size: 150%; color: blue;">😐</span> No errors yet, but you haven’t reached the conclusion.';
-            }
-         } else {
-            restext += '<span style="font-size: 150%; color: red;">☹</span> <strong>Sorry there were errors</strong>.<br />';
-            restext += res.issues.join('<br />');
-         }
-         proofBeingChecked.results.innerHTML = restext;
-         proofBeingChecked = false;
-      });
 
-      //putting the proof items into arrays
-      var Premise = [];
-      var Logic = [];
-      var Rules = [];
-      for(var i = 0; i < this.proofdata.length; i++){
-         if(this.proofdata[i].jstr == "Pr"){
-            Premise.push(this.proofdata[i].wffstr);
-         }else{
-            Logic.push(this.proofdata[i].wffstr);
-            Rules.push(this.proofdata[i].jstr);
-         }
-      }
-      //creating object to send over to database server
-      var id = null; //no need to set this, will be set at server
-      var entryType = "proof";
-      var proofName = "n/a";
-      var userSubmitted = null; //only until we get the sign in to work
-      var timeSubmitted = new Date();
-      var conclusion = this.wantedConc;
-      console.log("right before assigning: " + localStorage.getItem("completed"));
-      var bool = localStorage.getItem("completed");
-      var postData = new Proof(id, entryType, userSubmitted, proofName, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
-      //sending proof to database, still need user sign in
+      //creating these variables to use in nested ajax call
+      var pd = this.proofdata;
+      var wc = this.wantedConc;
+      //sending proof to be checked
       $.ajax({
          type: "POST",
-         url: "https://proofsdb.herokuapp.com/saveproof",
-         contentType: "application/json",
+         url: "../php/checkproof.php",
          dataType: "json",
-         data: JSON.stringify(postData),
+         data: {
+            "predicateSettings": predicateSettings.toString(),
+            "proofData" : JSON.stringify(this.proofdata),
+            "wantedConc" : this.wantedConc,
+            "numPrems" : this.numPrems
+         }, 
          success: function(data,status) {
             console.log(data);
-            console.log(status);
+            if (!(proofBeingChecked)){
+               return;
+            }
+            console.log("XX" + data);
+            setLocalCompleted(data.concReached);
+            var restext = '';
+            if (data.issues.length == 0) {
+               if (data.concReached == true) {
+                  restext += '<span style="font-size: 150%; color: green;">☺</span> Congratulations! This proof is correct.';
+               } else {
+                  restext += '<span style="font-size: 150%; color: blue;">😐</span> No errors yet, but you haven’t reached the conclusion.';
+               }
+            } else {
+               restext += '<span style="font-size: 150%; color: red;">☹</span> <strong>Sorry there were errors</strong>.<br />';
+               restext += data.issues.join('<br />');
+            }
+            proofBeingChecked.results.innerHTML = restext;
+            proofBeingChecked = false;
+
+            ///saving proof to db only in user is logged in
+            if(sessionStorage.getItem("userlogged") !== null){
+               //putting the proof items into arrays
+               var Premise = [];
+               var Logic = [];
+               var Rules = [];
+               for(var i = 0; i < pd.length; i++){
+                  if(pd[i].jstr == "Pr"){
+                     Premise.push(pd[i].wffstr);
+                  }else{
+                     Logic.push(pd[i].wffstr);
+                     Rules.push(pd[i].jstr);
+                  }
+               }
+               //creating object to send over to database server
+               var id = null; //no need to set this, will be set at server
+               var entryType = "proof";
+               if($("#proofName").val() === ""){
+                  var proofName = "n/a";
+               }
+               else{
+                  var proofName = $("#proofName").val();
+               }
+               var userSubmitted = sessionStorage.getItem("userlogged"); 
+               var timeSubmitted = new Date();
+               var conclusion = wc;
+               console.log("right before assigning: " + sessionStorage.getItem("completed"));
+               console.log("after ajax call" + sessionStorage.getItem("completed"));
+               var bool = sessionStorage.getItem("completed");
+               var postData = new Proof(id, entryType, userSubmitted, proofName, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
+               //sending proof to database, still need user sign in
+               $.ajax({
+                  type: "POST",
+                  url: "https://proofsdb.herokuapp.com//saveproof",
+                  contentType: "application/json",
+                  dataType: "json",
+                  data: JSON.stringify(postData),
+                  success: function(data,status) {
+                     console.log("proof saved");
+                  },
+                  error: function(data,status) { //optional, used for debugging purposes
+                     
+                     }
+               });//ajax
+            }else{
+               console.log("proof not saved");
+            }
+            ///
          },
          error: function(data,status) { //optional, used for debugging purposes
             console.log(data);
-            console.log(status);
          }
-     });//ajax
-
+      });
+      
+      
    }
    
    p.displayMe = function() {
