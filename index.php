@@ -161,6 +161,13 @@ session_start();
                       <br>
                       <br>
                       
+                      <div id="insertToDB" hidden>
+                        <label for="proof-name">Proof Name: </label>
+                        <input id="proof-name" /> </br> </br>
+                        <button class="button">Send Proof To Database</button>
+                      </div>  
+                        
+                        
                     </div>
 
             </div>
@@ -430,6 +437,19 @@ session_start();
         }
       });
 
+
+    //hide proof loader if user is in insert mode
+     var url_string =window.location.href;
+      var url = new URL(url_string);
+      var c = url.searchParams.get("mode");
+        if(c=="insert")
+            $("#load-container").hide();
+            
+            
+
+
+
+
       //creating a problem based on premise and conclusion
       $("#createProb").click( function() {
       predicateSettings = (document.getElementById("folradio").checked);
@@ -478,6 +498,25 @@ session_start();
       var tp = document.getElementById("theproof");
       tp.innerHTML = '';
       makeProof(tp, sofar, wffToString(cw, false));
+      
+      
+      //checking if there is a user logged in
+    
+      if(sessionStorage.getItem("userlogged") === null){
+        
+
+    }else{ //a user is logged in
+      
+            var url_string =window.location.href;
+            var url = new URL(url_string);
+            var c = url.searchParams.get("mode");
+            if(c=="insert")
+            $("#insertToDB").show();
+            
+            
+    }
+      
+      
       });
       ///
     

@@ -235,6 +235,18 @@ function followsByDNE($c, $a) {
         ($a->rightSide->mainOp == "¬")
         &&
         (sameWff($c, $a->rightSide->rightSide))
+        
+        ||
+        
+        ($c->mainOp == "¬")
+        &&
+        ($c->rightSide->mainOp == "¬")
+        &&
+        (sameWff($a, $c->rightSide->rightSide))
+        
+        
+        
+        
     );
 }
 
