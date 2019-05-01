@@ -4,6 +4,7 @@ class Proof{
    entryType
    userSubmitted;
    proofName;
+   proofType;
    Premise;
    Logic;
    Rules;
@@ -11,11 +12,12 @@ class Proof{
    conclusion;
    timeSubmitted;
 
-   constructor(id, entryType, userSubmitted, proofName, Premise, Logic, Rules, proofCompleted, conclusion, timeSubmitted){
+   constructor(id, entryType, userSubmitted, proofName,proofType, Premise, Logic, Rules, proofCompleted, conclusion, timeSubmitted){
       this.id = id;
       this.entryType = entryType;
       this.userSubmitted = userSubmitted;
       this.proofName = proofName;
+      this.proofType=proofType;
       this.Premise = Premise;
       this.Logic = Logic;
       this.Rules = Rules;
@@ -437,6 +439,93 @@ function makeProof(pardiv, pstart, conc) {
       $("#proofdetails").hide();
       $("#theproof").html("");
    }
+   
+   
+   
+   
+      
+   
+      var url_string =window.location.href;
+      var url = new URL(url_string);
+      var c = url.searchParams.get("mode");
+        if(c=="insert")
+        {
+            
+               p.pushToDBButton = document.createElement("button");
+               p.pushToDBButton.type = "button";
+               p.pushToDBButton.innerHTML = "PUSH PROOF TO DB";
+               pardiv.appendChild(p.pushToDBButton);
+               p.pushToDBButton.start = pstart.slice(0);
+               p.pushToDBButton.myPardiv = pardiv;
+               p.pushToDBButton.conc = conc;
+               p.pushToDBButton.myP = p;
+            
+      
+            
+      p.pushToDBButton.onclick = function() { console.log(predicateSettings.toString());
+      
+      var pd = this.start;
+      var wc = this.conc;
+        //putting the proof items into arrays
+               var Premise = [];
+               var Logic = [];
+               var Rules = [];
+               for(var i = 0; i < pd.length; i++){
+                  if(pd[i].jstr == "Pr"){
+                     Premise.push(pd[i].wffstr);
+                  }else{
+                     Logic.push(pd[i].wffstr);
+                     Rules.push(pd[i].jstr);
+                  }
+               }
+      
+      
+             //creating object to send over to database server
+               var id = null; //no need to set this, will be set at server
+               var entryType = "proof";
+               if($("#proofName").val() === ""){
+                  var proofName = "n/a";
+               }
+               else{
+                  var proofName = $("#proofName").val();
+               }
+               var userSubmitted = sessionStorage.getItem("userlogged"); 
+               var timeSubmitted = new Date();
+               var conclusion = wc;
+               var proofType="test";
+               console.log("right before assigning: " + sessionStorage.getItem("completed"));
+               console.log("after ajax call" + sessionStorage.getItem("completed"));
+               var bool = sessionStorage.getItem("completed");
+               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
+               
+               $.ajax({
+                  type: "POST",
+                  url: "https://proofsdb.herokuapp.com//saveproof",
+                  contentType: "application/json",
+                  dataType: "json",
+                  data: JSON.stringify(postData),
+                  success: function(data,status) {
+                     console.log("proof saved");
+                  },
+                  error: function(data,status) { //optional, used for debugging purposes
+                     
+                     }
+               });//ajax
+      
+      
+      
+   }
+            
+            
+            
+            
+   
+        }
+        
+        
+        
+   
+   
    //delete line from to proof
    p.deleteLine = function(n) {
       this.proofdata = deletePDLine(this.proofdata, n);
