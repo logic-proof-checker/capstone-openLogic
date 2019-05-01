@@ -161,11 +161,7 @@ session_start();
                       <br>
                       <br>
                       
-                      <div id="insertToDB" hidden>
-                        <label for="proof-name">Proof Name: </label>
-                        <input id="proof-name" /> </br> </br>
-                        <button class="button">Send Proof To Database</button>
-                      </div>  
+
                         
                         
                     </div>
@@ -502,21 +498,7 @@ session_start();
       makeProof(tp, sofar, wffToString(cw, false));
       
       
-      //checking if there is a user logged in
-    
-      if(sessionStorage.getItem("userlogged") === null){
-        
-
-    }else{ //a user is logged in
-      
-            var url_string =window.location.href;
-            var url = new URL(url_string);
-            var c = url.searchParams.get("mode");
-            if(c=="insert")
-            $("#insertToDB").show();
-            
-            
-    }
+  
       
       
       });
