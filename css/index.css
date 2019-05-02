@@ -25,7 +25,13 @@ body{
 	color: #002A4E;
 }
 #loadproof{
-	height: 20px;
+	height: 25px;
+}
+#loadrepo{
+	height: 25px;
+}
+#loadfinishedrepo{
+	height: 25px;
 }
 hr{
 	width: 90%;
@@ -100,5 +106,15 @@ textarea{
 	padding-left: 0.5rem;
 	height: 20px;
 	width: 100px;
+}
+#rulesContainer{
+	margin-bottom: 1rem; 
+	width:95%;
+}
+#imageHeader{
+	margin-left: 0px;	
+    margin-right: 0px;	
+		color: #002A4E;
+		letter-spacing: .15rem;
 }
 

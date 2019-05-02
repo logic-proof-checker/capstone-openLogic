@@ -1,5 +1,55 @@
 <?php
 session_start();
+//code to download data to csv
+// var csv = 'id,entryType,userSubmitted, proofName, proofType, Premise, Logic, Rules, proofCompleted, timeSubmitted, Conclusion\n';
+// data.forEach(element => {
+//   csv += element.id + ",";
+//   csv += element.entryType + ",";
+//   csv += element.userSubmitted + ",";
+//   csv += element.proofName + ",";
+//   csv += element.proofType + ",";
+//   var pr = "["
+//   for(var i = 0; i < element.premise.length; i++){
+//     if(i + 1 === element.premise.length){
+//       pr += element.premise[i];
+//     }
+//     else{
+//       pr += element.premise[i] + "|"
+//     }
+//   }
+//   pr += "]";
+//   csv += pr  + ",";
+//   var lo = "["
+//   for(var i = 0; i < element.logic.length; i++){
+//     if(i + 1 === element.logic.length){
+//       lo += element.logic[i];
+//     }
+//     else{
+//       lo += element.logic[i] + "|"
+//     }
+//   }
+//   lo += "]";
+//   csv += lo  + ",";
+//   var ru = "["
+//   for(var i = 0; i < element.rules.length; i++){
+//     if(i + 1 === element.lorulesgic.length){
+//       ru += element.rules[i];
+//     }
+//     else{
+//       ru += element.rules[i] + "|"
+//     }
+//   }
+//   ru += "]";
+//   csv += ru  + ",";
+//   csv += element.proofCompleted  + ",";
+//   csv += element.timeSubmitted  + ",";
+//   csv += element.conclusion  + ",";
+// });
+// var hiddenElement = document.createElement('a');
+// hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+// hiddenElement.target = '_blank';
+// hiddenElement.download = 'data.csv';
+// hiddenElement.click();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +104,10 @@ session_start();
     <script type="text/javascript" charset="utf-8" src="../js/proofs.js"></script>
 
     <script type="text/javascript">
+    var adminUsers = ["drbruns"];
     var proofsPulled;
+    var repoproofsPulled;
+    var finishedrepoproofsPulled
     var user = sessionStorage.getItem("userlogged");
 
     class User{
@@ -76,10 +129,9 @@ session_start();
     function hasNumber(myString) {
       return /\d/.test(myString);
     }
-
+    //unfinished proofs
     function loadSelect(){
         user = sessionStorage.getItem("userlogged");
-        //loading proofs bases on user / still need login and sign up
         $.ajax({
           type: "GET",
           url: "https://proofsdb.herokuapp.com/user/" + user,
@@ -92,6 +144,48 @@ session_start();
               loadproofInnerHtml += "<option value='" + element.id + "'>" + element.proofName + "</option>"
             });
             $("#loadproof").html(loadproofInnerHtml);
+          },
+          error: function(data,status) { //optional, used for debugging purposes
+              console.log(data);
+          }
+      });//ajax
+    }
+    //repo proofs
+    function repoloadSelect(){
+        user = sessionStorage.getItem("userlogged");
+        $.ajax({
+          type: "GET",
+          url: "https://proofsdb.herokuapp.com/repo",
+          success: function(data,status) {
+            repoproofsPulled = data;
+            console.log(repoproofsPulled);
+            loadproofInnerHtml = "";
+            loadproofInnerHtml += "<option>select one</option>"
+            repoproofsPulled.forEach(element => {
+              loadproofInnerHtml += "<option value='" + element.id + "'>" + element.proofName + "</option>"
+            });
+            $("#loadrepo").html(loadproofInnerHtml);
+          },
+          error: function(data,status) { //optional, used for debugging purposes
+              console.log(data);
+          }
+      });//ajax
+    }
+    //finished repo proofs
+    function finishedrepoloadSelect(){
+        user = sessionStorage.getItem("userlogged");
+        $.ajax({
+          type: "GET",
+          url: "https://proofsdb.herokuapp.com/completedrepo/" + user,
+          success: function(data,status) {
+            finishedrepoproofsPulled = data;
+            console.log(finishedrepoproofsPulled);
+            loadproofInnerHtml = "";
+            loadproofInnerHtml += "<option>select one</option>"
+            finishedrepoproofsPulled.forEach(element => {
+              loadproofInnerHtml += "<option value='" + element.id + "'>" + element.proofName + "</option>"
+            });
+            $("#loadfinishedrepo").html(loadproofInnerHtml);
           },
           error: function(data,status) { //optional, used for debugging purposes
               console.log(data);
@@ -124,15 +218,31 @@ session_start();
       </div>
 
   <!-- middle stuff -->
-      <div id="load-container">
-        <label for="loadproof">load previous proofs: </label>
-        <select id="loadproof">
-          <option> waiting for server...</option>
-        </select>
+      <div id="load-container" >
+        <div style="float: left;"> 
+          <label for="loadproof">load unfinished proofs: </label>
+          <select id="loadproof">
+            <option> waiting for server...</option>
+          </select>
+        </div>
+        <!--  -->
+        <div style="float: left; padding-left: .9rem;"> 
+          <label for="loadrepo">load repository problems: </label>
+          <select id="loadrepo" data-content="Loading repository problems will lock the 'name your proof', 'Premise', and 'Conclusion' inputs. To resart press the 'resart proof checking from scratch' button or refesh the page.">
+            <option> waiting for server...</option>
+          </select>
+        </div>
+         <!--  -->
+         <div style="float: left; padding-left: .9rem;"> 
+          <label for="loadfinshedrepo">finished repository problems: </label>
+          <select id="loadfinishedrepo" data-content="Finished repository problems will lock the 'name your proof', 'Premise', and 'Conclusion' inputs. To resart press the 'resart proof checking from scratch' button or refesh the page.">
+            <option> waiting for server...</option>
+          </select>
+        </div>
       </div>
       
-      <div class="ui vertically divided grid">
-          <div class="two column row" style="padding:2rem">
+      <div class="ui vertically divided grid" style="clear: both;">
+          <div class="two column row" style="padding:1.5rem;padding-top:1rem;">
             <div class="column">
               
                     <h3 id="textarea-header" class="ui top attached header">
@@ -141,10 +251,10 @@ session_start();
                     <div id="textarea-container" class="ui attached segment">
 
                         <div id="nameYourProof" style="padding-bottom: 14px;">
-                        <label>name your proof:</label>
-                        <div class="ui input" >
-                          <input id="proofName" type="text" placeholder="proof name" data-content="Naming your proof will allow you to finish it later if it is incomplete!">
-                        </div>
+                          <label>name your proof:</label>
+                          <div class="ui input" >
+                            <input id="proofName" type="text" placeholder="proof name" data-content="Naming your proof will allow you to finish it later if it is incomplete 👍🏽">
+                          </div>
                         </div>
 
                       <input type="radio" name="tflfol" id="tflradio" checked /> <label for="tflradio">Propositional </label>
@@ -163,7 +273,7 @@ session_start();
                       
                       <div id="insertToDB" hidden>
                         <label for="proof-name">Proof Name: </label>
-                        <input id="proof-name" /> </br> </br>
+                        <input id="proof-name" /> <br> <br>
                         <button class="button">Send Proof To Database</button>
                       </div>  
                         
@@ -274,11 +384,11 @@ session_start();
         </div>
       </div>
 
-      <div id="logoutmodal" class="ui basic modal">
+      <div id="logoutmodal" class="ui basic modal segment">
         <div id="logoutUsername" class="ui icon header">
         </div>
         <div class="content" style="text-align: center;">
-          Are you sure you would like to log out?
+          Would like to log out?
         </div>
         <div class="actions" style="text-align: center;">
           <div class="ui basic cancel inverted button">
@@ -294,7 +404,7 @@ session_start();
         
   </body>
   <script type="text/javascript">
-
+      sessionStorage.setItem("repoProblem", "false")
       $('#logoutmodal').modal('hide');
       var signInGood = true;
       $("#uUPspan").hide();
@@ -309,12 +419,6 @@ session_start();
         }
       });
 
-      //logout
-      $("#logoutButton").click(function(){
-        sessionStorage.removeItem("userlogged");
-        location.reload(); 
-      });
-
       //checking if there is a user logged in
       if(sessionStorage.getItem("userlogged") === null){
         $("#load-container").hide();
@@ -323,9 +427,23 @@ session_start();
       }else{
         $("#load-container").show();
         $("#nameYourProof").show();
-        $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
+        if(sessionStorage.getItem("administrator") === true){
+          $("#log-sign").html("Admin: " + sessionStorage.getItem("userlogged").toString());
+        }else{
+          $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
+        }
         loadSelect();
+        repoloadSelect();
+        finishedrepoloadSelect();
       }
+      //end checking if there is a user logged in 
+
+      //logout
+      $("#logoutButton").click(function(){
+        sessionStorage.clear();
+        location.reload(); 
+      });
+      //end logout
 
       //logging in
       $("#login-button").click(function(){
@@ -340,12 +458,24 @@ session_start();
           type: "GET",
           url: "https://proofsdb.herokuapp.com/li/" + u,
           success: function(data,status) {
-            sessionStorage.setItem("userlogged", data.username);
-            $("#load-container").show();
+            console.log(adminUsers.length);
             if(u === data.username && p === data.password){
+              for(var i = 0; i < adminUsers.length; i++){
+                if(adminUsers[i] === data.username){
+                  sessionStorage.setItem("administrator", true);
+                  alert(sessionStorage.getItem("administrator"));
+                  console.log("you are an administrator!");
+                  break;
+                }
+              }
+              sessionStorage.setItem("userlogged", data.username);
+              $("#load-container").show();
               $("#log-sign").html(sessionStorage.getItem("userlogged"));
               loadSelect();
+              repoloadSelect();
+              finishedrepoloadSelect();
               $('.ui.basic.modal').modal('hide');
+              //location.reload(); 
             }else{
               console.log(data);
               alert("username or password incorrect");
@@ -359,10 +489,8 @@ session_start();
           }
           });//ajax
         }
-
-     
       });
-      //
+      //end loggin in
 
       //checking if username is valid on signup
       $("#uUP").on("keyup paste", function(){
@@ -393,7 +521,7 @@ session_start();
         });//ajax
         }
       });
-      ///
+      //end checking if username is valid on signup
 
       //signing up
       $("#signupButton").click(function () {
@@ -438,89 +566,81 @@ session_start();
           });//ajax
         }
       });
-
+      //end signing up
 
     //hide proof loader if user is in insert mode
-     var url_string =window.location.href;
-      var url = new URL(url_string);
-      var c = url.searchParams.get("mode");
-        if(c=="insert")
-            $("#load-container").hide();
+    var url_string =window.location.href;
+    var url = new URL(url_string);
+    var c = url.searchParams.get("mode");
+    if(c==="insert"){
+      $("#load-container").hide();
+    }
             
-            
-
-
-
-
-      //creating a problem based on premise and conclusion
-      $("#createProb").click( function() {
-      predicateSettings = (document.getElementById("folradio").checked);
-      var pstr = document.getElementById("probpremises").value;
-      pstr = pstr.replace(/^[,;\s]*/,'');
-      pstr = pstr.replace(/[,;\s]*$/,'');
-      var prems = pstr.split(/[,;\s]*[,;][,;\s]*/);
-      var sofar = [];
-      for (var a=0; a<prems.length; a++) {
-        if (prems[a] != '') {
-          var w = parseIt(fixWffInputStr(prems[a]));
-          if (!(w.isWellFormed)) {
-            alert('Premise ' + (a+1) + ' is not well formed.');
-            return;
-            }
-          if ((predicateSettings) && (!(w.allFreeVars.length == 0))) {
-            alert('Premise ' + (a+1) + ' is not closed.');
-            return;
+    //creating a problem based on premise and conclusion
+    $("#createProb").click( function() {
+    predicateSettings = (document.getElementById("folradio").checked);
+    var pstr = document.getElementById("probpremises").value;
+    pstr = pstr.replace(/^[,;\s]*/,'');
+    pstr = pstr.replace(/[,;\s]*$/,'');
+    var prems = pstr.split(/[,;\s]*[,;][,;\s]*/);
+    var sofar = [];
+    for (var a=0; a<prems.length; a++) {
+      if (prems[a] != '') {
+        var w = parseIt(fixWffInputStr(prems[a]));
+        if (!(w.isWellFormed)) {
+          alert('Premise ' + (a+1) + ' is not well formed.');
+          return;
           }
-          sofar.push({
-            "wffstr": wffToString(w, false),
-            "jstr": "Pr"
-          });
+        if ((predicateSettings) && (!(w.allFreeVars.length == 0))) {
+          alert('Premise ' + (a+1) + ' is not closed.');
+          return;
         }
+        sofar.push({
+          "wffstr": wffToString(w, false),
+          "jstr": "Pr"
+        });
       }
-      var conc = fixWffInputStr(document.getElementById("probconc").value);
-      var cw = parseIt(conc);
-      if (!(cw.isWellFormed)) {
-        alert('Conclusion is not well formed.');
-        return;
+    }
+    var conc = fixWffInputStr(document.getElementById("probconc").value);
+    var cw = parseIt(conc);
+    if (!(cw.isWellFormed)) {
+      alert('Conclusion is not well formed.');
+      return;
+    }
+    if ((predicateSettings) && (!(cw.allFreeVars.length == 0))) {
+      alert('The conclusion is not closed.');
+      return;
+    }
+    document.getElementById("problabel").style.display = "block";
+    document.getElementById("proofdetails").style.display = "block";
+    var probstr = '';
+    for (var k=0; k<sofar.length; k++) {
+      probstr += prettyStr(sofar[k].wffstr);
+        if ((k+1) != sofar.length) {
+        probstr += ', ';
       }
-      if ((predicateSettings) && (!(cw.allFreeVars.length == 0))) {
-        alert('The conclusion is not closed.');
-        return;
-      }
-      document.getElementById("problabel").style.display = "block";
-      document.getElementById("proofdetails").style.display = "block";
-      var probstr = '';
-      for (var k=0; k<sofar.length; k++) {
-        probstr += prettyStr(sofar[k].wffstr);
-          if ((k+1) != sofar.length) {
-          probstr += ', ';
-        }
-      }
-      document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
-      var tp = document.getElementById("theproof");
-      tp.innerHTML = '';
-      makeProof(tp, sofar, wffToString(cw, false));
-      
-      
-      //checking if there is a user logged in
+    }
+    document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
+    var tp = document.getElementById("theproof");
+    tp.innerHTML = '';
+    makeProof(tp, sofar, wffToString(cw, false));
     
-      if(sessionStorage.getItem("userlogged") === null){
-        
+    
+    //checking if there is a user logged in
+  
+    if(sessionStorage.getItem("userlogged") === null){
 
     }else{ //a user is logged in
-      
-            var url_string =window.location.href;
-            var url = new URL(url_string);
-            var c = url.searchParams.get("mode");
-            if(c=="insert")
-            $("#insertToDB").show();
-            
-            
+      var url_string =window.location.href;
+      var url = new URL(url_string);
+      var c = url.searchParams.get("mode");
+      if(c=="insert")
+      $("#insertToDB").show();      
     }
       
       
-      });
-      ///
+    });
+    //end creating a problem based on premise and conclusion
     
     //loading a proof
      $("#loadproof").change(function(){
@@ -532,6 +652,17 @@ session_start();
           proofwanted = element
         }
       });
+
+      var premString = "";
+      for(var i = 0; i < proofwanted.premise.length; i++){
+        if(i+1 === proofwanted.premise.length){
+          premString += proofwanted.premise[i];
+        }
+        else{
+          premString += proofwanted.premise[i] + ", ";
+        }
+      }
+
       var sofar = [];
       for(var i = 0; i < proofwanted.premise.length; i++){
         var w = parseIt(fixWffInputStr(proofwanted.premise[i]));
@@ -559,11 +690,154 @@ session_start();
       }
       document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
       var tp = document.getElementById("theproof");
+      $("#probpremises").val(premString);
+      $("#probconc").val(proofwanted.conclusion);
+      $("#proofName").val(proofwanted.proofName);
+      if(proofwanted.proofType === "prop"){
+        document.getElementById("tflradio").checked = true;
+      }
+      else{
+        document.getElementById("folradio").checked = true;
+      }
       $("#theproof").html("");
       $("#proofdetails").show();
       makeProof(tp, sofar, wffToString(cw, false));
      });
-    ///
+    /// end loading a proof
+
+    //loading a proof from repo
+    $("#loadrepo").change(function(){
+      var proofId = $(this).children("option:selected").val();
+      var proofwanted;
+
+      repoproofsPulled.forEach(element => {
+        if(element.id === proofId){
+          proofwanted = element
+        }
+      });
+
+      var premString = "";
+      for(var i = 0; i < proofwanted.premise.length; i++){
+        if(i+1 === proofwanted.premise.length){
+          premString += proofwanted.premise[i];
+        }
+        else{
+          premString += proofwanted.premise[i] + ", ";
+        }
+      }
+
+      var sofar = [];
+      for(var i = 0; i < proofwanted.premise.length; i++){
+        var w = parseIt(fixWffInputStr(proofwanted.premise[i]));
+        sofar.push({
+            "wffstr": wffToString(w, false),
+            "jstr": "Pr"
+          });
+      }
+      for(var i = 0; i < proofwanted.logic.length; i++){
+        var w = parseIt(fixWffInputStr(proofwanted.logic[i]));
+        //var r = parseIt(fixWffInputStr(proofwanted.rules[i]));
+        sofar.push({
+            "wffstr": wffToString(w, false),
+            "jstr": proofwanted.rules[i]
+          });
+      }
+      var conc = fixWffInputStr(proofwanted.conclusion)
+      var cw = parseIt(conc);
+      var probstr = '';
+      for (var k=0; k<sofar.length; k++) {
+        probstr += prettyStr(sofar[k].wffstr);
+          if ((k+1) != sofar.length) {
+          probstr += ', ';
+        }
+      }
+      document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
+      var tp = document.getElementById("theproof");
+      $("#probpremises").val(premString);
+      $("#probconc").val(proofwanted.conclusion);
+      $("#proofName").val(proofwanted.proofName);
+      document.getElementById("proofName").disabled = true;
+      document.getElementById("probconc").disabled = true;
+      document.getElementById("probpremises").disabled = true;
+      if(proofwanted.proofType === "prop"){
+        document.getElementById("tflradio").checked = true;
+      }
+      else{
+        document.getElementById("folradio").checked = true;
+      }
+      $("#theproof").html("");
+      $("#proofdetails").show();
+      sessionStorage.setItem("repoProblem", "true");
+      makeProof(tp, sofar, wffToString(cw, false));
+     });
+    ///end loading a proof from repo
+
+    //loading a finished proof from repo
+    $("#loadfinishedrepo").change(function(){
+      var proofId = $(this).children("option:selected").val();
+      var proofwanted;
+
+      finishedrepoproofsPulled.forEach(element => {
+        if(element.id === proofId){
+          proofwanted = element
+        }
+      });
+
+      var premString = "";
+      for(var i = 0; i < proofwanted.premise.length; i++){
+        if(i+1 === proofwanted.premise.length){
+          premString += proofwanted.premise[i];
+        }
+        else{
+          premString += proofwanted.premise[i] + ", ";
+        }
+      }
+
+      var sofar = [];
+      for(var i = 0; i < proofwanted.premise.length; i++){
+        var w = parseIt(fixWffInputStr(proofwanted.premise[i]));
+        sofar.push({
+            "wffstr": wffToString(w, false),
+            "jstr": "Pr"
+          });
+      }
+      for(var i = 0; i < proofwanted.logic.length; i++){
+        var w = parseIt(fixWffInputStr(proofwanted.logic[i]));
+        //var r = parseIt(fixWffInputStr(proofwanted.rules[i]));
+        sofar.push({
+            "wffstr": wffToString(w, false),
+            "jstr": proofwanted.rules[i]
+          });
+      }
+      var conc = fixWffInputStr(proofwanted.conclusion)
+      var cw = parseIt(conc);
+      var probstr = '';
+      for (var k=0; k<sofar.length; k++) {
+        probstr += prettyStr(sofar[k].wffstr);
+          if ((k+1) != sofar.length) {
+          probstr += ', ';
+        }
+      }
+      document.getElementById("proofdetails").innerHTML = "Construct a proof for the argument: " + probstr + " ∴ " +  wffToString(cw, true);
+      var tp = document.getElementById("theproof");
+      $("#probpremises").val(premString);
+      $("#probconc").val(proofwanted.conclusion);
+      $("#proofName").val(proofwanted.proofName);
+      document.getElementById("proofName").disabled = true;
+      document.getElementById("probconc").disabled = true;
+      document.getElementById("probpremises").disabled = true;
+      if(proofwanted.proofType === "prop"){
+        document.getElementById("tflradio").checked = true;
+      }
+      else{
+        document.getElementById("folradio").checked = true;
+      }
+      $("#theproof").html("");
+      $("#proofdetails").show();
+      sessionStorage.setItem("repoProblem", "true");
+      makeProof(tp, sofar, wffToString(cw, false));
+     });
+    ///end loading a finsshed proof from repo
 
     $(".toggle-password").click(function(){
       var input = $($(this).attr("toggle"));
@@ -576,11 +850,13 @@ session_start();
       }
     });
 
-    $("#title").mouseover(function(){
-      $(this).transition('pulse');
-    });
-
     $('#proofName').popup({ 
+      on: 'hover'
+    });
+    $('#loadrepo').popup({ 
+      on: 'hover'
+    });
+    $('#loadfinishedrepo').popup({ 
       on: 'hover'
     });
   </script>
