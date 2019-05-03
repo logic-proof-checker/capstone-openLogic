@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="index.css">
     <link rel="stylesheet" type="text/css" href="admin.css">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">    
-    <script 
+    <script
     src="https://code.jquery.com/jquery-3.1.1.min.js" 
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" 
     crossorigin="anonymous">
@@ -78,7 +78,7 @@
           <div class="ui attached segment">
               
             <div id="optionsList" class="ui bulleted list">
-              <div id="li" class="item"><a href="index.php/?mode=insert" style="color:black; font-weight: 300;">Add Proofs</a></div>
+              <div id="li" class="item"><a href="index.php?mode=insert" style="color:black; font-weight: 300;">Add Proofs</a></div>
               <div id="li" class="item"><a href="" style="color:black; font-weight: 300;">View Students</a></div>
               <div id="li" class="item"><a href="" style="color:black; font-weight: 300;">View Proof Stats</a></div>
             </div>

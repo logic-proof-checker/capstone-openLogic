@@ -602,7 +602,7 @@ function makeProof(pardiv, pstart, conc) {
       //sending proof to be checked
       $.ajax({
          type: "POST",
-         url: "../php/checkproof.php",
+         url: "checkproof.php",
          dataType: "json",
          data: {
             "predicateSettings": predicateSettings.toString(),
