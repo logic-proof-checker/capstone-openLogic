@@ -126,11 +126,7 @@
                       <br>
                       <br>
                       
-                      <div id="insertToDB" hidden>
-                        <label for="proof-name">Proof Name: </label>
-                        <input id="proof-name" /> <br> <br>
-                        <button class="button">Send Proof To Database</button>
-                      </div>  
+                      
                            
                     </div>
 
