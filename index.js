@@ -230,6 +230,23 @@ $("#login-button").click(function(){
         }
         sessionStorage.setItem("userlogged", data.username);
         $("#load-container").show();
+        //checking if there is a user logged in
+        if(sessionStorage.getItem("userlogged") === null){
+          $("#load-container").hide();
+          $("#nameyourproof").hide();
+          $("#log-sign").html("Login / Sign-up");
+        }else{
+          $("#load-container").show();
+          $("#nameyourproof").show();
+          if(sessionStorage.getItem("administrator") === "true"){
+            $("#log-sign").html("Admin: " + sessionStorage.getItem("userlogged").toString());
+          }else{
+            $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
+          }
+          loadSelect();
+          repoloadSelect();
+          finishedrepoloadSelect();
+        }
         $("#log-sign").html(sessionStorage.getItem("userlogged"));
         loadSelect();
         repoloadSelect();
