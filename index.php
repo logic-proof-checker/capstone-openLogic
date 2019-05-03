@@ -24,19 +24,19 @@
     <title>proof checker</title>
 
     <!-- page style from https://github.com/dhg/Skeleton -->
-    <link rel="stylesheet" href="../css/normalize.css">
-    <link rel="stylesheet" href="../css/skeleton.css">
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="skeleton.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet" type="text/css">
     <link rel="icon" href="/assets/logicproofchecker.png">
-    <link rel="stylesheet" type="text/css" href="../semantic/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/index.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">    
     <script 
     src="https://code.jquery.com/jquery-3.1.1.min.js" 
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" 
     crossorigin="anonymous">
     </script>
-    <script src="../semantic/semantic.min.js"></script>
+    <script src="semantic/semantic.min.js"></script>
     <style>
       body {font-family: "Noto Sans";}
       a, a:hover, a:visited, a:focus, a:active {color: #0c1c8c; text-decoration: none; font-weight: bold ;}
@@ -44,11 +44,11 @@
     </style>
   
     <!-- css file -->
-    <link rel="stylesheet" type="text/css" href="../css/proofs.css" />
+    <link rel="stylesheet" type="text/css" href="proofs.css" />
     <!-- javascript file -->
-    <script type="text/javascript" charset="utf-8" src="../js/ajax.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../js/syntax.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../js/proofs.js"></script>
+    <script type="text/javascript" charset="utf-8" src="ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="syntax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="proofs.js"></script>
 
   </head>
   <body>
@@ -105,7 +105,7 @@
                     </h3>
                     <div id="textarea-container" class="ui attached segment">
 
-                        <div id="nameYourProof" style="padding-bottom: 14px;">
+                        <div id="nameyourproof" style="padding-bottom: 14px;">
                           <label>name your proof:</label>
                           <div class="ui input" >
                             <input id="proofName" type="text" placeholder="proof name" data-content="Naming your proof will allow you to finish it later if it is incomplete 👍🏽">
@@ -271,5 +271,5 @@
       </div>
         
   </body>
-  <script type="text/javascript" src="../js/index.js"></script>
+  <script type="text/javascript" src="index.js"></script>
 </html>
