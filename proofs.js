@@ -451,6 +451,101 @@ function makeProof(pardiv, pstart, conc) {
       location.reload();
    }
 
+
+
+
+      var url_string =window.location.href;
+      var url = new URL(url_string);
+      var c = url.searchParams.get("mode");
+      
+        if(c=="insert")
+        {
+            
+               p.pushToDBButton = document.createElement("button");
+               p.pushToDBButton.type = "button";
+               p.pushToDBButton.innerHTML = "PUSH PROOF TO DB";
+               pardiv.appendChild(p.pushToDBButton);
+               p.pushToDBButton.start = pstart.slice(0);
+               p.pushToDBButton.myPardiv = pardiv;
+               p.pushToDBButton.conc = conc;
+               p.pushToDBButton.myP = p;
+            
+      
+            
+      p.pushToDBButton.onclick = function() { console.log(predicateSettings.toString());
+      
+      var pd = this.start;
+      var wc = this.conc;
+        //putting the proof items into arrays
+               var Premise = [];
+               var Logic = [];
+               var Rules = [];
+               for(var i = 0; i < pd.length; i++){
+                  if(pd[i].jstr == "Pr"){
+                     Premise.push(pd[i].wffstr);
+                  }else{
+                     Logic.push(pd[i].wffstr);
+                     Rules.push(pd[i].jstr);
+                  }
+               }
+               //creating object to send over to database server
+               var id = null; //no need to set this, will be set at server
+               var entryType = "proof";
+               if($("#proofName").val() === ""){
+                  var proofName = "n/a";
+               }
+               else{
+                  var proofName = $("#proofName").val();
+               }
+               var userSubmitted = sessionStorage.getItem("userlogged"); 
+               var proofType;
+               if(document.getElementById("tflradio").checked){
+                  proofType = "prop";
+               }
+               else{
+                  proofType = "fol";
+               }
+               var timeSubmitted = new Date();
+               var conclusion = wc;
+               //repo problem var
+               if(sessionStorage.getItem("repoProblem" === "false")){
+                  var repoProblem = "false";
+               }else{
+                  var repoProblem = "true";
+               }
+               // console.log("right before assigning: " + sessionStorage.getItem("completed"));
+               // console.log("after ajax call" + sessionStorage.getItem("completed"));
+               var bool = sessionStorage.getItem("completed");
+               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted, sessionStorage.getItem("repoProblem"));
+               
+               console.log(postData);
+               $.ajax({
+                  type: "POST",
+                  url: "https://proofsdb.herokuapp.com/saveproof",
+                  contentType: "application/json",
+                  dataType: "json",
+                  data: JSON.stringify(postData),
+                  success: function(data,status) {
+                     console.log("proof saved");
+                     loadSelect();
+                  },
+                  error: function(data,status) { //optional, used for debugging purposes
+                     
+                     }
+               });//ajax
+      
+      
+      
+   }
+            
+            
+            
+            
+   
+        }
+
+
+
    //delete line from to proof
    p.deleteLine = function(n) {
       this.proofdata = deletePDLine(this.proofdata, n);
@@ -632,7 +727,12 @@ function makeProof(pardiv, pstart, conc) {
             proofBeingChecked = false;
 
             ///saving proof to db only in user is logged in
-            if(sessionStorage.getItem("userlogged") !== null){
+               var url_string =window.location.href;
+               var url = new URL(url_string);
+               var c = url.searchParams.get("mode");
+            
+   
+            if(sessionStorage.getItem("userlogged") !== null && c!="insert"){
                //putting the proof items into arrays
                var Premise = [];
                var Logic = [];
