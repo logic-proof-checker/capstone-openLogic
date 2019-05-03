@@ -239,8 +239,12 @@ $("#login-button").click(function(){
           $("#load-container").show();
           $("#nameyourproof").show();
           if(sessionStorage.getItem("administrator") === "true"){
+            $("#load-container").hide();
+            $("#nameyourproof").hide();
             $("#log-sign").html("Admin: " + sessionStorage.getItem("userlogged").toString());
           }else{
+            $("#load-container").show();
+            $("#nameyourproof").show();
             $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
           }
           loadSelect();
@@ -350,7 +354,7 @@ var url_string =window.location.href;
 var url = new URL(url_string);
 var c = url.searchParams.get("mode");
 if(c==="insert"){
-$("#load-container").hide();
+  $("#load-container").hide();
 }
       
 //creating a problem based on premise and conclusion
