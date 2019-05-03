@@ -193,7 +193,7 @@ $("#log-sign").click(function(){
 
 $("#optionsButton").click(function(){
   if(sessionStorage.getItem("administrator") === "true"){
-    window.location.replace("admin.php")
+    window.location.replace("admin.html")
   }else{
     //
   }
