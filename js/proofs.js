@@ -11,19 +11,21 @@ class Proof{
    proofCompleted;
    conclusion;
    timeSubmitted;
+   repoProblem;
 
-   constructor(id, entryType, userSubmitted, proofName,proofType, Premise, Logic, Rules, proofCompleted, conclusion, timeSubmitted){
+   constructor(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, proofCompleted, conclusion, timeSubmitted, repoProblem){
       this.id = id;
       this.entryType = entryType;
       this.userSubmitted = userSubmitted;
       this.proofName = proofName;
-      this.proofType=proofType;
+      this.proofType = proofType;
       this.Premise = Premise;
       this.Logic = Logic;
       this.Rules = Rules;
       this.proofCompleted = proofCompleted;
       this.conclusion = conclusion;
       this.timeSubmitted = timeSubmitted;
+      this.repoProblem = repoProblem;
    }
 }
 
@@ -402,12 +404,12 @@ function makeProof(pardiv, pstart, conc) {
    p.results = document.createElement("div");
    pardiv.appendChild(p.results);
    p.results.classList.add("resultsdiv");
-   
    p.checkButton = document.createElement("button");
    p.checkButton.type = "button";
    p.checkButton.innerHTML = "check proof";
    p.checkButton.myP = p;
    pardiv.appendChild(p.checkButton);
+   //check proof button
    p.checkButton.onclick = function() {
       this.myP.registerInput();
       this.myP.openline = 0;
@@ -417,8 +419,6 @@ function makeProof(pardiv, pstart, conc) {
       this.myP.startCheckMe();
    }
 
-
-   
    p.startOverButton = document.createElement("button");
    p.startOverButton.type = "button";
    p.startOverButton.innerHTML = "start over";
@@ -427,7 +427,6 @@ function makeProof(pardiv, pstart, conc) {
    p.startOverButton.myPardiv = pardiv;
    p.startOverButton.conc = conc;
    p.startOverButton.myP = p;
-
    //start over
    p.startOverButton.onclick = function() {
       this.myP.parentNode.removeChild(this.myP.checkButton);
@@ -439,93 +438,19 @@ function makeProof(pardiv, pstart, conc) {
       $("#proofdetails").hide();
       $("#theproof").html("");
    }
-   
-   
-   
-   
-      
-   
-      var url_string =window.location.href;
-      var url = new URL(url_string);
-      var c = url.searchParams.get("mode");
-        if(c=="insert")
-        {
-            
-               p.pushToDBButton = document.createElement("button");
-               p.pushToDBButton.type = "button";
-               p.pushToDBButton.innerHTML = "PUSH PROOF TO DB";
-               pardiv.appendChild(p.pushToDBButton);
-               p.pushToDBButton.start = pstart.slice(0);
-               p.pushToDBButton.myPardiv = pardiv;
-               p.pushToDBButton.conc = conc;
-               p.pushToDBButton.myP = p;
-            
-      
-            
-      p.pushToDBButton.onclick = function() { console.log(predicateSettings.toString());
-      
-      var pd = this.start;
-      var wc = this.conc;
-        //putting the proof items into arrays
-               var Premise = [];
-               var Logic = [];
-               var Rules = [];
-               for(var i = 0; i < pd.length; i++){
-                  if(pd[i].jstr == "Pr"){
-                     Premise.push(pd[i].wffstr);
-                  }else{
-                     Logic.push(pd[i].wffstr);
-                     Rules.push(pd[i].jstr);
-                  }
-               }
-      
-      
-             //creating object to send over to database server
-               var id = null; //no need to set this, will be set at server
-               var entryType = "proof";
-               if($("#proofName").val() === ""){
-                  var proofName = "n/a";
-               }
-               else{
-                  var proofName = $("#proofName").val();
-               }
-               var userSubmitted = sessionStorage.getItem("userlogged"); 
-               var timeSubmitted = new Date();
-               var conclusion = wc;
-               var proofType="test";
-               console.log("right before assigning: " + sessionStorage.getItem("completed"));
-               console.log("after ajax call" + sessionStorage.getItem("completed"));
-               var bool = sessionStorage.getItem("completed");
-               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
-               
-               $.ajax({
-                  type: "POST",
-                  url: "https://proofsdb.herokuapp.com//saveproof",
-                  contentType: "application/json",
-                  dataType: "json",
-                  data: JSON.stringify(postData),
-                  success: function(data,status) {
-                     console.log("proof saved");
-                  },
-                  error: function(data,status) { //optional, used for debugging purposes
-                     
-                     }
-               });//ajax
-      
-      
-      
+
+   //clearing the whole proof board
+   var br = document.createElement("p");
+   pardiv.appendChild(br);
+   p.restartFromScratch = document.createElement("button");
+   p.restartFromScratch.type = "button";
+   p.restartFromScratch.innerHTML = "restart proof checking from scratch";
+   pardiv.appendChild(p.restartFromScratch);
+   //restart from scratch
+   p.restartFromScratch.onclick = function() {
+      location.reload();
    }
-            
-            
-            
-            
-   
-        }
-        
-        
-        
-   
-   
+
    //delete line from to proof
    p.deleteLine = function(n) {
       this.proofdata = deletePDLine(this.proofdata, n);
@@ -730,21 +655,36 @@ function makeProof(pardiv, pstart, conc) {
                   var proofName = $("#proofName").val();
                }
                var userSubmitted = sessionStorage.getItem("userlogged"); 
+               var proofType;
+               if(document.getElementById("tflradio").checked){
+                  proofType = "prop";
+               }
+               else{
+                  proofType = "fol";
+               }
                var timeSubmitted = new Date();
                var conclusion = wc;
-               console.log("right before assigning: " + sessionStorage.getItem("completed"));
-               console.log("after ajax call" + sessionStorage.getItem("completed"));
+               //repo problem var
+               if(sessionStorage.getItem("repoProblem" === "false")){
+                  var repoProblem = "false";
+               }else{
+                  var repoProblem = "true";
+               }
+               // console.log("right before assigning: " + sessionStorage.getItem("completed"));
+               // console.log("after ajax call" + sessionStorage.getItem("completed"));
                var bool = sessionStorage.getItem("completed");
-               var postData = new Proof(id, entryType, userSubmitted, proofName, Premise, Logic, Rules, bool, conclusion, timeSubmitted);
-               //sending proof to database, still need user sign in
+               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted, sessionStorage.getItem("repoProblem"));
+               
+               console.log(postData);
                $.ajax({
                   type: "POST",
-                  url: "https://proofsdb.herokuapp.com//saveproof",
+                  url: "https://proofsdb.herokuapp.com/saveproof",
                   contentType: "application/json",
                   dataType: "json",
                   data: JSON.stringify(postData),
                   success: function(data,status) {
                      console.log("proof saved");
+                     loadSelect();
                   },
                   error: function(data,status) { //optional, used for debugging purposes
                      
