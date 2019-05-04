@@ -166,8 +166,12 @@ if(sessionStorage.getItem("userlogged") === null){
   $("#load-container").show();
   $("#nameyourproof").show();
   if(sessionStorage.getItem("administrator") === "true"){
+    $("#load-container").hide();
+    $("#nameyourproof").hide();
     $("#log-sign").html("Admin: " + sessionStorage.getItem("userlogged").toString());
   }else{
+    $("#load-container").show();
+    $("#nameyourproof").show();
     $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
   }
   loadSelect();

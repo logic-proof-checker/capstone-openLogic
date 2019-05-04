@@ -268,4 +268,28 @@
         
   </body>
   <script type="text/javascript" src="index.js"></script>
+  <script>
+        //checking if there is a user logged in
+        if(sessionStorage.getItem("userlogged") === null){
+        $("#load-container").hide();
+        $("#nameyourproof").hide();
+        $("#log-sign").html("Login / Sign-up");
+        }else{
+        $("#load-container").show();
+        $("#nameyourproof").show();
+        if(sessionStorage.getItem("administrator") === "true"){
+            $("#load-container").hide();
+            $("#nameyourproof").hide();
+            $("#log-sign").html("Admin: " + sessionStorage.getItem("userlogged").toString());
+        }else{
+            $("#load-container").show();
+            $("#nameyourproof").show();
+            $("#log-sign").html(sessionStorage.getItem("userlogged").toString());
+        }
+        loadSelect();
+        repoloadSelect();
+        finishedrepoloadSelect();
+        }
+        //end checking if there is a user logged in
+  </script>
 </html>
