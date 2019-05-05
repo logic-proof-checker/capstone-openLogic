@@ -458,7 +458,7 @@ function makeProof(pardiv, pstart, conc) {
       var url = new URL(url_string);
       var c = url.searchParams.get("mode");
       
-        if(c=="insert")
+        if(c=="insert" && sessionStorage.getItem("administrator") === "true")
         {
             
                p.pushToDBButton = document.createElement("button");
@@ -495,7 +495,7 @@ function makeProof(pardiv, pstart, conc) {
                   var proofName = "n/a";
                }
                else{
-                  var proofName = $("#proofName").val();
+                  var proofName = "Repository - " + $("#proofName").val();
                }
                var userSubmitted = sessionStorage.getItem("userlogged"); 
                var proofType;
@@ -508,15 +508,13 @@ function makeProof(pardiv, pstart, conc) {
                var timeSubmitted = new Date();
                var conclusion = wc;
                //repo problem var
-               if(sessionStorage.getItem("repoProblem" === "false")){
-                  var repoProblem = "false";
-               }else{
+              
                   var repoProblem = "true";
-               }
+               
                // console.log("right before assigning: " + sessionStorage.getItem("completed"));
                // console.log("after ajax call" + sessionStorage.getItem("completed"));
-               var bool = sessionStorage.getItem("completed");
-               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted, sessionStorage.getItem("repoProblem"));
+               var bool = "false"; //problem not completed
+               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted, repoProblem );
                
                console.log(postData);
                $.ajax({

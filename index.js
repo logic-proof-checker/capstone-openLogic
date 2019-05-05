@@ -167,7 +167,17 @@ if(sessionStorage.getItem("userlogged") === null){
   $("#nameyourproof").show();
   if(sessionStorage.getItem("administrator") === "true"){
     $("#load-container").hide();
-    $("#nameyourproof").hide();
+    
+      var url_string =window.location.href;
+      var url = new URL(url_string);
+      var c = url.searchParams.get("mode");
+      if(c!="insert"){
+        $("#nameyourproof").hide(); 
+      }
+      
+      else{  $("#nameyourproof").show();    }
+    
+    
     $("#log-sign").html("Admin: " + sessionStorage.getItem("userlogged").toString());
   }else{
     $("#load-container").show();
@@ -244,7 +254,16 @@ $("#login-button").click(function(){
           $("#nameyourproof").show();
           if(sessionStorage.getItem("administrator") === "true"){
             $("#load-container").hide();
-            $("#nameyourproof").hide();
+            
+              var url_string =window.location.href;
+              var url = new URL(url_string);
+              var c = url.searchParams.get("mode");
+              if(c!="insert"){
+                $("#nameyourproof").hide(); 
+              }
+              
+              else{  $("#nameyourproof").show();    }
+            
             $("#log-sign").html("Admin: " + sessionStorage.getItem("userlogged").toString());
           }else{
             $("#load-container").show();
