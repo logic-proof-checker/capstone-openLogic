@@ -45,10 +45,6 @@
   
     <!-- css file -->
     <link rel="stylesheet" type="text/css" href="proofs.css" />
-    <!-- javascript file -->
-    <script type="text/javascript" charset="utf-8" src="ajax.js"></script>
-    <script type="text/javascript" charset="utf-8" src="syntax.js"></script>
-    <script type="text/javascript" charset="utf-8" src="proofs.js"></script>
 
   </head>
   <body>
@@ -267,6 +263,10 @@
       </div>
         
   </body>
+   <!-- javascript file -->
+  <script type="text/javascript" charset="utf-8" src="ajax.js"></script>
+  <script type="text/javascript" charset="utf-8" src="syntax.js"></script>
+  <script type="text/javascript" charset="utf-8" src="proofs.js"></script>
   <script type="text/javascript" src="index.js"></script>
   <script>
         //checking if there is a user logged in
