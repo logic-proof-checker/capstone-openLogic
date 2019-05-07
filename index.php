@@ -52,25 +52,25 @@
 
   </head>
   <body>
-      <div id="top-menu" class="ui menu" style = "height : 60px;">
-          <div class="header item">
-            <h1 id="title" style = "color : white;"><a href="index.php" style="color:white;">Proof Checker</a></h1>
-            <!-- <img id="logo" src="/assets/applogo.png" alt="Italian Trulli" > -->
+  <div id="top-menu" class="ui menu" style = "height : 60px;">
+        <div class="header item">
+          <h1 id="title" style = "color : white;"><a href="index.php" style="color:white;">Proof Checker</a></h1>
+          <!-- <img id="logo" src="/assets/applogo.png" alt="Italian Trulli" > -->
+        </div>
+        <a href="help.html" class="item" style = "color : white;">
+          Help
+        </a>
+        <a href="references.html" class="item" style = "color : white;">
+          References
+        </a>
+        <a href="rules.html" class="item" style = "color : white;">
+          Logic Rules
+        </a>
+        <div class="right menu">
+            <p id="log-sign" class="item" style = "color : white;">
+          </p>
           </div>
-          <a href="help.html" class="item" style = "color : white;">
-            Help
-          </a>
-          <a class="item" style = "color : white;">
-            About us
-          </a>
-          <a class="item" style = "color : white;">
-            References
-          </a>
-          <div class="right menu">
-  	        <p id="log-sign" class="item" style = "color : white;">
-            </p>
-	        </div>
-      </div>
+    </div>
 
   <!-- middle stuff -->
       <div id="load-container" >
