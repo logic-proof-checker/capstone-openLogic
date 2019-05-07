@@ -785,8 +785,8 @@ function makeProof(pardiv, pstart, conc) {
                      loadSelect();
                   },
                   error: function(data,status) { //optional, used for debugging purposes
-                     
-                     }
+                     alert("error");
+                  }
                });//ajax
             }else{
                console.log("proof not saved");
