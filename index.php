@@ -13,10 +13,10 @@
     <meta property="og:image" content="sample.png" />
     <meta property="og:description" content="Fitch-style proof proof editor and checker" />
 
-    <!-- if mobile ready -->
+    <!-- if mobile ready
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" /> -->
 
     <!-- web icon -->
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
@@ -42,7 +42,6 @@
       a, a:hover, a:visited, a:focus, a:active {color: #0c1c8c; text-decoration: none; font-weight: bold ;}
       label, legend { display: inline-block; } 
     </style>
-  
     <!-- css file -->
     <link rel="stylesheet" type="text/css" href="proofs.css" />
 

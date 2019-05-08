@@ -508,11 +508,7 @@ function makeProof(pardiv, pstart, conc) {
                var timeSubmitted = new Date();
                var conclusion = wc;
                //repo problem var
-              
-                  var repoProblem = "true";
-               
-               // console.log("right before assigning: " + sessionStorage.getItem("completed"));
-               // console.log("after ajax call" + sessionStorage.getItem("completed"));
+               var repoProblem = "true";
                var bool = "false"; //problem not completed
                var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted, repoProblem );
                
@@ -768,10 +764,8 @@ function makeProof(pardiv, pstart, conc) {
                }else{
                   var repoProblem = "true";
                }
-               // console.log("right before assigning: " + sessionStorage.getItem("completed"));
-               // console.log("after ajax call" + sessionStorage.getItem("completed"));
                var bool = sessionStorage.getItem("completed");
-               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted, sessionStorage.getItem("repoProblem"));
+               var postData = new Proof(id, entryType, userSubmitted, proofName, proofType, Premise, Logic, Rules, bool, conclusion, timeSubmitted, repoProblem);
                
                console.log(postData);
                $.ajax({
