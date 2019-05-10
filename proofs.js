@@ -33,6 +33,7 @@ class Proof{
 
 var proofBeingChecked = false;
 var proofCompleted = false;
+var repoProblem = false;
 
 function setLocalCompleted(cr){
    //console.log("cr " + cr)
@@ -779,7 +780,7 @@ function makeProof(pardiv, pstart, conc) {
                      loadSelect();
                   },
                   error: function(data,status) { //optional, used for debugging purposes
-                     alert("error");
+                     //alert("error");
                   }
                });//ajax
             }else{
